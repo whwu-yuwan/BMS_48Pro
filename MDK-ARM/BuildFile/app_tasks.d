@@ -35,11 +35,13 @@
 .\buildfile\app_tasks.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 .\buildfile\app_tasks.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
 .\buildfile\app_tasks.o: D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\Bin\..\include\stdio.h
-.\buildfile\app_tasks.o: ..\Config\bms_config.h
-.\buildfile\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/freertos.h
+.\buildfile\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
 .\buildfile\app_tasks.o: ../Core/Inc/FreeRTOSConfig.h
 .\buildfile\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
 .\buildfile\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
 .\buildfile\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
 .\buildfile\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3/portmacro.h
 .\buildfile\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+.\buildfile\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+.\buildfile\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+.\buildfile\app_tasks.o: ..\Config\bms_config.h

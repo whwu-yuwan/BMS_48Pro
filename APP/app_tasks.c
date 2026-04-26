@@ -1,6 +1,8 @@
 #include "app_tasks.h"
 #include <stdio.h>
 #include <stdint.h>
+#include "FreeRTOS.h"
+#include "task.h"
 #include "bms_config.h"
 #include "cmsis_os2.h"
 #include "iwdg.h"
@@ -9,6 +11,14 @@ osSemaphoreId_t g_sem_fault_trigger = NULL;
 osMutexId_t g_mutex_data = NULL;
 osMutexId_t g_mutex_i2c = NULL;
 BMS_Data_t bms_data;
+
+static osThreadId_t g_task_data_collect = NULL;
+static osThreadId_t g_task_fault_protect = NULL;
+static osThreadId_t g_task_charge_control = NULL;
+static osThreadId_t g_task_soc_calc = NULL;
+static osThreadId_t g_task_balance = NULL;
+static osThreadId_t g_task_can_comm = NULL;
+static osThreadId_t g_task_assist = NULL;
 
 void DataCollectTask(void *arg){
 	(void)arg;
@@ -96,9 +106,23 @@ void CanCommTask(void *arg){
 
 void AssistTask(void *arg){
 	(void)arg;
+	uint32_t last_report_tick = 0;
     for(;;)
     {
-        printf("[辅助任务] 运行中... Tick: %u | 模拟喂狗/LED闪烁\r\n", osKernelGetTickCount());
+		uint32_t now = osKernelGetTickCount();
+		if ((now - last_report_tick) >= 1000u)
+		{
+			last_report_tick = now;
+			printf("[辅助任务] StackHW(words): Data=%u Fault=%u Charge=%u SOC=%u Balance=%u CAN=%u Assist=%u\r\n",
+				   (unsigned int)uxTaskGetStackHighWaterMark((TaskHandle_t)g_task_data_collect),
+				   (unsigned int)uxTaskGetStackHighWaterMark((TaskHandle_t)g_task_fault_protect),
+				   (unsigned int)uxTaskGetStackHighWaterMark((TaskHandle_t)g_task_charge_control),
+				   (unsigned int)uxTaskGetStackHighWaterMark((TaskHandle_t)g_task_soc_calc),
+				   (unsigned int)uxTaskGetStackHighWaterMark((TaskHandle_t)g_task_balance),
+				   (unsigned int)uxTaskGetStackHighWaterMark((TaskHandle_t)g_task_can_comm),
+				   (unsigned int)uxTaskGetStackHighWaterMark(NULL));
+		}
+
         HAL_IWDG_Refresh(&hiwdg);
         osDelay(TASK_PERIOD_ASSIST);
     }
@@ -116,43 +140,43 @@ void APP_Task_Create(void){
 	g_sem_fault_trigger = osSemaphoreNew(5, 0, NULL);
 	g_mutex_data = osMutexNew(NULL);
 	
-	osThreadNew(DataCollectTask, NULL, &(osThreadAttr_t){
+	g_task_data_collect = osThreadNew(DataCollectTask, NULL, &(osThreadAttr_t){
 		.name = "DataCollectTask",
 		.priority = TASK_PRIO_DATA_COLLECT,
         .stack_size = TASK_STACK_DATA_COLLECT * 4,
 	});
 	
-	osThreadNew(FaultProtectTask, NULL, &(osThreadAttr_t){
+	g_task_fault_protect = osThreadNew(FaultProtectTask, NULL, &(osThreadAttr_t){
 		.name = "FaultProtectTask",
 		.priority = TASK_PRIO_FAULT_PROTECT,
         .stack_size = TASK_STACK_FAULT_PROTECT * 4,
 	});
 
-	osThreadNew(ChargeControlTask, NULL, &(osThreadAttr_t){
+	g_task_charge_control = osThreadNew(ChargeControlTask, NULL, &(osThreadAttr_t){
 		.name = "ChargeControlTask",
 		.priority = TASK_PRIO_CHARGE_CONTROL,
 		.stack_size = TASK_STACK_CHARGE_CONTROL * 4,
 	});
 
-	osThreadNew(SocCalcTask, NULL, &(osThreadAttr_t){
+	g_task_soc_calc = osThreadNew(SocCalcTask, NULL, &(osThreadAttr_t){
 		.name = "SocCalcTask",
 		.priority = TASK_PRIO_SOC_CALC,
 		.stack_size = TASK_STACK_SOC_CALC * 4,
 	});
 
-	osThreadNew(CanCommTask, NULL, &(osThreadAttr_t){
+	g_task_can_comm = osThreadNew(CanCommTask, NULL, &(osThreadAttr_t){
 		.name = "CanCommTask",
 		.priority = TASK_PRIO_CAN_COMM,
 		.stack_size = TASK_STACK_CAN_COMM * 4,
 	});
 
-	osThreadNew(BalanceTask, NULL, &(osThreadAttr_t){
+	g_task_balance = osThreadNew(BalanceTask, NULL, &(osThreadAttr_t){
 		.name = "BalanceTask",
 		.priority = TASK_PRIO_BALANCE,
 		.stack_size = TASK_STACK_BALANCE * 4,
 	});
 
-	osThreadNew(AssistTask, NULL, &(osThreadAttr_t){
+	g_task_assist = osThreadNew(AssistTask, NULL, &(osThreadAttr_t){
 		.name = "AssistTask",
 		.priority = TASK_PRIO_ASSIST,
 		.stack_size = TASK_STACK_ASSIST * 4,
