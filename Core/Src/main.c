@@ -27,7 +27,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
+#include "bsp_bq76940.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -55,11 +56,78 @@
 void SystemClock_Config(void);
 void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
+static void BQ76940_Test_Init(void);
+static void BQ76940_Test_Poll(void);
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+static uint8_t g_bq_inited = 0;
+
+static void BQ76940_Test_Init(void)
+{
+  g_bq_inited = 0;
+
+  for (uint8_t i = 0; i < 5; i++)
+  {
+    if (BQ76940_Init() == 0)
+    {
+      g_bq_inited = 1;
+      break;
+    }
+    HAL_IWDG_Refresh(&hiwdg);
+    HAL_Delay(20);
+  }
+
+  if (g_bq_inited)
+  {
+    printf("BQ76940 init OK\r\n");
+  }
+  else
+  {
+    printf("BQ76940 init FAIL\r\n");
+  }
+}
+
+static void BQ76940_Test_Poll(void)
+{
+  static uint32_t last_print_ms = 0;
+
+  HAL_IWDG_Refresh(&hiwdg);
+
+  if (!g_bq_inited)
+  {
+    HAL_Delay(10);
+    return;
+  }
+
+  uint32_t now = HAL_GetTick();
+  if ((now - last_print_ms) < 500u)
+  {
+    HAL_Delay(10);
+    return;
+  }
+  last_print_ms = now;
+
+  float cell_v[BQ76940_CELL_NUM] = {0};
+  float pack_i = 0.0f;
+  float ts1_v = 0.0f;
+  uint8_t fault = 0;
+
+  uint8_t ok_v = (BQ76940_ReadVoltage(cell_v) == 0);
+  uint8_t ok_i = (BQ76940_ReadCurrent(&pack_i) == 0);
+  uint8_t ok_t = (BQ76940_ReadTemp(&ts1_v) == 0);
+  uint8_t ok_f = (BQ76940_ReadFault(&fault) == 0);
+
+  printf("BQ:V=%u I=%u T=%u F=%u | I=%.3fA TS1=%.3fV STAT=0x%02X | C1=%.3fV C13=%.3fV\r\n",
+         ok_v, ok_i, ok_t, ok_f, pack_i, ts1_v, fault, cell_v[0], cell_v[BQ76940_CELL_NUM - 1]);
+
+  if (fault != 0)
+  {
+    BQ76940_ClearFault();
+  }
+}
 
 /* USER CODE END 0 */
 
@@ -98,12 +166,16 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   printf("Start...\r\n");
+
+  BQ76940_Test_Init();
+  
+  
   /* USER CODE END 2 */
 
   /* Init scheduler */
   osKernelInitialize();  /* Call init function for freertos objects (in cmsis_os2.c) */
   MX_FREERTOS_Init();
-  
+
   /* Start scheduler */
   osKernelStart();
 
@@ -116,6 +188,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    BQ76940_Test_Poll();
   }
   /* USER CODE END 3 */
 }

@@ -27,38 +27,14 @@ Project File Date:  04/26/2026
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\Bin'
 Build target 'Template_STM32F103C8T6_Hal_20260425'
-compiling freertos.c...
-compiling app_tasks.c...
-..\APP\app_tasks.c(35): warning:  #870-D: invalid multibyte character sequence
-  		printf("[采样任务] 运行�?... Tick: %u | 模拟读取13串电�?:[%.2f]电流:[%.2f]温度:[]\r\n", osKernelGetTickCount(), voltage, current);
-..\APP\app_tasks.c(35): warning:  #870-D: invalid multibyte character sequence
-  		printf("[采样任务] 运行�?... Tick: %u | 模拟读取13串电�?:[%.2f]电流:[%.2f]温度:[]\r\n", osKernelGetTickCount(), voltage, current);
-..\APP\app_tasks.c(52): warning:  #870-D: invalid multibyte character sequence
-  				printf("[故障任务] 运行�?... Tick: %u | 模拟检测故障状�?: 过压[%.2f]\r\n", osKernelGetTickCount(), voltage);
-..\APP\app_tasks.c(52): warning:  #870-D: invalid multibyte character sequence
-  				printf("[故障任务] 运行�?... Tick: %u | 模拟检测故障状�?: 过压[%.2f]\r\n", osKernelGetTickCount(), voltage);
-..\APP\app_tasks.c(58): warning:  #870-D: invalid multibyte character sequence
-  				printf("[故障任务] 运行�?... Tick: %u | 模拟检测故障状�?: 过流[%.2f]\r\n", osKernelGetTickCount(), current);
-..\APP\app_tasks.c(58): warning:  #870-D: invalid multibyte character sequence
-  				printf("[故障任务] 运行�?... Tick: %u | 模拟检测故障状�?: 过流[%.2f]\r\n", osKernelGetTickCount(), current);
-..\APP\app_tasks.c(71): warning:  #870-D: invalid multibyte character sequence
-  		 printf("[充放电任务] 运行�?... Tick: %u | 模拟判断充放电状态\r\n", osKernelGetTickCount());
-..\APP\app_tasks.c(84): warning:  #870-D: invalid multibyte character sequence
-  		printf("[SOC任务] 运行�?... Tick: %u | 模拟计算SOC: %d \r\n", osKernelGetTickCount(), soc);
-..\APP\app_tasks.c(93): warning:  #870-D: invalid multibyte character sequence
-  		printf("[均衡任务] 运行�?... Tick: %u | 模拟控制电芯均衡\r\n", osKernelGetTickCount());
-..\APP\app_tasks.c(102): warning:  #870-D: invalid multibyte character sequence
-  		printf("[CAN任务] 运行�?... Tick: %u | 模拟CAN收发数据\r\n", osKernelGetTickCount());
-..\APP\app_tasks.c(21): warning:  #550-D: variable "g_task_assist"  was set but never used
-  static osThreadId_t g_task_assist = NULL;
-..\APP\app_tasks.c: 11 warnings, 0 errors
+compiling main.c...
 linking...
-Program Size: Code=20358 RO-data=1338 RW-data=188 ZI-data=17500  
+Program Size: Code=15870 RO-data=626 RW-data=96 ZI-data=3136  
 FromELF: creating hex file...
 After Build - User command #1: fromelf --bin --output D:\01_Embedded\01_Project\BMS_48Pro_260425\Template_STM32F103C8T6_Hal_20260425\MDK-ARM\BuildFile
 Error: Q0120E: No input file specified.
 Finished: 0 information, 0 warning and 1 error messages.
-".\BuildFile\BMS_48_pro.axf" - 0 Error(s), 11 Warning(s).
+".\BuildFile\BMS_48_pro.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -82,7 +58,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.4.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:03
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>
