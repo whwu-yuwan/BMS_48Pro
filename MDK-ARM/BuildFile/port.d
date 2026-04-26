@@ -1,0 +1,12 @@
+.\buildfile\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3/port.c
+.\buildfile\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+.\buildfile\port.o: D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\Bin\..\include\stddef.h
+.\buildfile\port.o: D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\Bin\..\include\stdint.h
+.\buildfile\port.o: ../Core/Inc/FreeRTOSConfig.h
+.\buildfile\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+.\buildfile\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+.\buildfile\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+.\buildfile\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3/portmacro.h
+.\buildfile\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+.\buildfile\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+.\buildfile\port.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h

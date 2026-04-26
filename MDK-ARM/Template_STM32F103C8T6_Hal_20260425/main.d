@@ -42,3 +42,8 @@ template_stm32f103c8t6_hal_20260425\main.o: ../Middlewares/Third_Party/FreeRTOS/
 template_stm32f103c8t6_hal_20260425\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 template_stm32f103c8t6_hal_20260425\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
 template_stm32f103c8t6_hal_20260425\main.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
+template_stm32f103c8t6_hal_20260425\main.o: ../Core/Inc/can.h
+template_stm32f103c8t6_hal_20260425\main.o: ../Core/Inc/i2c.h
+template_stm32f103c8t6_hal_20260425\main.o: ../Core/Inc/iwdg.h
+template_stm32f103c8t6_hal_20260425\main.o: ../Core/Inc/usart.h
+template_stm32f103c8t6_hal_20260425\main.o: ../Core/Inc/gpio.h

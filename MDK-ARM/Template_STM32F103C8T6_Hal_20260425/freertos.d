@@ -40,3 +40,6 @@ template_stm32f103c8t6_hal_20260425\freertos.o: ../Drivers/STM32F1xx_HAL_Driver/
 template_stm32f103c8t6_hal_20260425\freertos.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 template_stm32f103c8t6_hal_20260425\freertos.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 template_stm32f103c8t6_hal_20260425\freertos.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+template_stm32f103c8t6_hal_20260425\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h
+template_stm32f103c8t6_hal_20260425\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
+template_stm32f103c8t6_hal_20260425\freertos.o: ..\APP\app_tasks.h

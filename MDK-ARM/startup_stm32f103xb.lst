@@ -472,13 +472,13 @@ ARM Macro Assembler    Page 8
               00000200 
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
-ork --depend=template_stm32f103c8t6_hal_20260425\startup_stm32f103xb.d -otempla
-te_stm32f103c8t6_hal_20260425\startup_stm32f103xb.o -I../Drivers/CMSIS/Include 
--I.\RTE\_Template_STM32F103C8T6_Hal_20260425 -ID:\01_Embedded\04_Tool\keil5\Pac
-ks\ARM\CMSIS\5.7.0\CMSIS\Core\Include -ID:\01_Embedded\04_Tool\keil5\Packs\Keil
-\STM32F1xx_DFP\2.4.1\Device\Include --predefine="__UVISION_VERSION SETA 534" --
-predefine="_RTE_ SETA 1" --predefine="STM32F10X_MD SETA 1" --predefine="_RTE_ S
-ETA 1" --list=startup_stm32f103xb.lst startup_stm32f103xb.s
+ork --depend=.\buildfile\startup_stm32f103xb.d -o.\buildfile\startup_stm32f103x
+b.o -I../Drivers/CMSIS/Include -I.\RTE\_Template_STM32F103C8T6_Hal_20260425 -ID
+:\01_Embedded\04_Tool\keil5\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include -ID:\01_Em
+bedded\04_Tool\keil5\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include --predefine=
+"__UVISION_VERSION SETA 534" --predefine="_RTE_ SETA 1" --predefine="STM32F10X_
+MD SETA 1" --predefine="_RTE_ SETA 1" --list=startup_stm32f103xb.lst startup_st
+m32f103xb.s
 
 
 

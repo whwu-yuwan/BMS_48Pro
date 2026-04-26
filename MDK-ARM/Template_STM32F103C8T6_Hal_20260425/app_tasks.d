@@ -1,1 +1,14 @@
 template_stm32f103c8t6_hal_20260425\app_tasks.o: ..\APP\app_tasks.c
+template_stm32f103c8t6_hal_20260425\app_tasks.o: ..\APP\app_tasks.h
+template_stm32f103c8t6_hal_20260425\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
+template_stm32f103c8t6_hal_20260425\app_tasks.o: D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\Bin\..\include\stdint.h
+template_stm32f103c8t6_hal_20260425\app_tasks.o: D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\Bin\..\include\stddef.h
+template_stm32f103c8t6_hal_20260425\app_tasks.o: D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\Bin\..\include\stdio.h
+template_stm32f103c8t6_hal_20260425\app_tasks.o: ..\Config\bms_config.h
+template_stm32f103c8t6_hal_20260425\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/freertos.h
+template_stm32f103c8t6_hal_20260425\app_tasks.o: ../Core/Inc/FreeRTOSConfig.h
+template_stm32f103c8t6_hal_20260425\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+template_stm32f103c8t6_hal_20260425\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+template_stm32f103c8t6_hal_20260425\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+template_stm32f103c8t6_hal_20260425\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3/portmacro.h
+template_stm32f103c8t6_hal_20260425\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h

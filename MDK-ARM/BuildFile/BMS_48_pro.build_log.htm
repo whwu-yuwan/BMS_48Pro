@@ -1,0 +1,87 @@
+<html>
+<body>
+<pre>
+<h1>�Vision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ��Vision V5.34.0.0
+Copyright (C) 2021 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: \ Administrator,  , LIC=GMZI6-DZPXZ-CXTU6-D5KDZ-VZYP8-MQWFK
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Plus  Version: 5.34.0.0
+Toolchain Path:  D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 7 (build 960)
+Assembler:       Armasm.exe V5.06 update 7 (build 960)
+Linker/Locator:  ArmLink.exe V5.06 update 7 (build 960)
+Library Manager: ArmAr.exe V5.06 update 7 (build 960)
+Hex Converter:   FromElf.exe V5.06 update 7 (build 960)
+CPU DLL:         SARMCM3.DLL V5.34.0.0
+Dialog DLL:      DCM.DLL V1.17.3.0
+Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.0.8.0
+Dialog DLL:      TCM.DLL V1.48.0.0
+ 
+<h2>Project:</h2>
+D:\01_Embedded\01_Project\BMS_48Pro_260425\Template_STM32F103C8T6_Hal_20260425\MDK-ARM\Template_STM32F103C8T6_Hal_20260425.uvprojx
+Project File Date:  04/26/2026
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\Bin'
+Build target 'Template_STM32F103C8T6_Hal_20260425'
+compiling app_tasks.c...
+..\APP\app_tasks.c(24): warning:  #870-D: invalid multibyte character sequence
+  		printf("[采样任务] 运行�?... Tick: %u | 模拟读取13串电�?:[%.2f]电流:[%.2f]温度:[]\r\n", osKernelGetTickCount(), voltage, current);
+..\APP\app_tasks.c(24): warning:  #870-D: invalid multibyte character sequence
+  		printf("[采样任务] 运行�?... Tick: %u | 模拟读取13串电�?:[%.2f]电流:[%.2f]温度:[]\r\n", osKernelGetTickCount(), voltage, current);
+..\APP\app_tasks.c(41): warning:  #870-D: invalid multibyte character sequence
+  				printf("[故障任务] 运行�?... Tick: %u | 模拟检测故障状�?: 过压[%.2f]\r\n", osKernelGetTickCount(), voltage);
+..\APP\app_tasks.c(41): warning:  #870-D: invalid multibyte character sequence
+  				printf("[故障任务] 运行�?... Tick: %u | 模拟检测故障状�?: 过压[%.2f]\r\n", osKernelGetTickCount(), voltage);
+..\APP\app_tasks.c(47): warning:  #870-D: invalid multibyte character sequence
+  				printf("[故障任务] 运行�?... Tick: %u | 模拟检测故障状�?: 过流[%.2f]\r\n", osKernelGetTickCount(), current);
+..\APP\app_tasks.c(47): warning:  #870-D: invalid multibyte character sequence
+  				printf("[故障任务] 运行�?... Tick: %u | 模拟检测故障状�?: 过流[%.2f]\r\n", osKernelGetTickCount(), current);
+..\APP\app_tasks.c(60): warning:  #870-D: invalid multibyte character sequence
+  		 printf("[充放电任务] 运行�?... Tick: %u | 模拟判断充放电状态\r\n", osKernelGetTickCount());
+..\APP\app_tasks.c(73): warning:  #870-D: invalid multibyte character sequence
+  		printf("[SOC任务] 运行�?... Tick: %u | 模拟计算SOC: %d \r\n", osKernelGetTickCount(), soc);
+..\APP\app_tasks.c(82): warning:  #870-D: invalid multibyte character sequence
+  		printf("[均衡任务] 运行�?... Tick: %u | 模拟控制电芯均衡\r\n", osKernelGetTickCount());
+..\APP\app_tasks.c(91): warning:  #870-D: invalid multibyte character sequence
+  		printf("[CAN任务] 运行�?... Tick: %u | 模拟CAN收发数据\r\n", osKernelGetTickCount());
+..\APP\app_tasks.c(100): warning:  #870-D: invalid multibyte character sequence
+          printf("[辅助任务] 运行�?... Tick: %u | 模拟喂狗/LED闪烁\r\n", osKernelGetTickCount());
+..\APP\app_tasks.c: 11 warnings, 0 errors
+linking...
+Program Size: Code=20282 RO-data=1242 RW-data=160 ZI-data=17496  
+FromELF: creating hex file...
+After Build - User command #1: fromelf --bin --output D:\01_Embedded\01_Project\BMS_48Pro_260425\Template_STM32F103C8T6_Hal_20260425\MDK-ARM\BuildFile
+Error: Q0120E: No input file specified.
+Finished: 0 information, 0 warning and 1 error messages.
+".\BuildFile\BMS_48_pro.axf" - 0 Error(s), 11 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                http://www.keil.com/pack/ARM.CMSIS.5.7.0.pack
+                ARM.CMSIS.5.7.0
+                CMSIS (Cortex Microcontroller Software Interface Standard)
+   * Component: CORE Version: 5.4.0
+
+Package Vendor: Keil
+                https://www.keil.com/pack/Keil.STM32F1xx_DFP.2.4.1.pack
+                Keil.STM32F1xx_DFP.2.4.1
+                STMicroelectronics STM32F1 Series Device Support, Drivers and Examples
+
+<h2>Collection of Component include folders:</h2>
+  .\RTE\_Template_STM32F103C8T6_Hal_20260425
+  D:\01_Embedded\04_Tool\keil5\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include
+  D:\01_Embedded\04_Tool\keil5\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE:5.4.0
+      Include file:  CMSIS\Core\Include\tz_context.h
+Build Time Elapsed:  00:00:03
+</pre>
+</body>
+</html>
