@@ -93,6 +93,7 @@ static void BQ76940_Test_Init(void)
 static void BQ76940_Test_Poll(void)
 {
   static uint32_t last_print_ms = 0;
+  static uint32_t last_diag_ms = 0;
 
   HAL_IWDG_Refresh(&hiwdg);
 
@@ -120,14 +121,40 @@ static void BQ76940_Test_Poll(void)
   uint8_t ok_t = (BQ76940_ReadTemp(&ts1_v) == 0);
   uint8_t ok_f = (BQ76940_ReadFault(&fault) == 0);
 
-  printf("BQ:V=%u I=%u T=%u F=%u | I=%.3fA TS1=%.3fV STAT=0x%02X | C1=%.3fV C13=%.3fV\r\n",
-         ok_v, ok_i, ok_t, ok_f, pack_i, ts1_v, fault, cell_v[0], cell_v[BQ76940_CELL_NUM - 1]);
+  printf("BQ:V=%u I=%u T=%u F=%u | I=%.3fA TS1=%.3fV STAT=0x%02X \r\n",
+         ok_v, ok_i, ok_t, ok_f, pack_i, ts1_v, fault);
 
-  if (fault != 0)
+  printf("c1=%.3fV,c2=%.3fV,c3=%.3fV,c4=%.3fV,c5=%.3fV,c6=%.3fV,c7=%.3fV,c8=%.3fV,c9=%.3fV,c10=%.3fV,c11=%.3fV,c12=%.3fV,c13=%.3fV,c14=%.3fV,c15=%.3fV\r\n",
+         cell_v[0], cell_v[1], cell_v[2], cell_v[3], cell_v[4], cell_v[5], cell_v[6], cell_v[7], cell_v[8], cell_v[9], cell_v[10], cell_v[11], cell_v[12], cell_v[13], cell_v[14]);
+
+  if ((now - last_diag_ms) >= 2000u)
   {
-    BQ76940_ClearFault();
+    last_diag_ms = now;
+
+    uint8_t adc_gain1 = 0;
+    uint8_t adc_gain2 = 0;
+    uint8_t adc_offset = 0;
+    uint8_t sys_ctrl1 = 0;
+    uint8_t sys_ctrl2 = 0;
+
+    uint8_t ok_gain1 = (BSP_I2C_Read_Byte(BQ76940_ADDR, BQ76940_REG_ADCGAIN1, &adc_gain1) == 0);
+    uint8_t ok_gain2 = (BSP_I2C_Read_Byte(BQ76940_ADDR, BQ76940_REG_ADCGAIN2, &adc_gain2) == 0);
+    uint8_t ok_offset = (BSP_I2C_Read_Byte(BQ76940_ADDR, BQ76940_REG_ADCOFFSET, &adc_offset) == 0);
+    uint8_t ok_sc1 = (BSP_I2C_Read_Byte(BQ76940_ADDR, BQ76940_REG_SYS_CTRL1, &sys_ctrl1) == 0);
+    uint8_t ok_sc2 = (BSP_I2C_Read_Byte(BQ76940_ADDR, BQ76940_REG_SYS_CTRL2, &sys_ctrl2) == 0);
+
+    printf("BQ_DIAG:ADCGAIN1(0x%02X)=%u ADCGAIN2(0x%02X)=%u ADCOFFSET(0x%02X)=%u SYS_CTRL1(0x%02X)=%u SYS_CTRL2(0x%02X)=%u\r\n",
+           ok_gain1 ? adc_gain1 : 0xFF, ok_gain1, ok_gain2 ? adc_gain2 : 0xFF, ok_gain2, ok_offset ? adc_offset : 0xFF, ok_offset, ok_sc1 ? sys_ctrl1 : 0xFF, ok_sc1, ok_sc2 ? sys_ctrl2 : 0xFF, ok_sc2);
+
+    printf("BQ_DIAG:SYS_CTRL1(ADC_EN=%u TEMP_SEL=%u SHUT_A=%u SHUT_B=%u) SYS_CTRL2(CC_EN=%u CHG_ON=%u DSG_ON=%u)\r\n",
+           (sys_ctrl1 >> 4) & 0x01u, (sys_ctrl1 >> 3) & 0x01u, (sys_ctrl1 >> 1) & 0x01u, sys_ctrl1 & 0x01u,
+           (sys_ctrl2 >> 6) & 0x01u, sys_ctrl2 & 0x01u, (sys_ctrl2 >> 1) & 0x01u);
   }
-}
+
+
+  BQ76940_ClearFault();
+  }
+
 
 /* USER CODE END 0 */
 

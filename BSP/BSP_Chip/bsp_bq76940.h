@@ -6,10 +6,20 @@
 
 // ==================== 配置 ====================
 #define BQ76940_ADDR            0x08    // BQ76940 I2C地址
-#define BQ76940_CELL_NUM        13      // 13串
+#define BQ76940_CELL_NUM        15      // 15串
+
+/* 电芯存在掩码：bit0=cell1 ... bit14=cell15，1=有电芯，0=无电芯 */
+#ifndef BQ76940_CELL_PRESENT_MASK
+#define BQ76940_CELL_PRESENT_MASK 0x4E73u
+#endif
 
 #ifndef BQ76940_USE_PEC
 #define BQ76940_USE_PEC 1
+#endif
+
+/* 读寄存器是否使用 PEC 校验：0=不使用，1=使用 */
+#ifndef BQ76940_READ_USE_PEC
+#define BQ76940_READ_USE_PEC 0
 #endif
 
 #ifndef BQ76940_USE_WAKE_PIN
@@ -49,8 +59,8 @@
 #define BQ76940_REG_CC_HI       0x32
 
 #define BQ76940_REG_ADCGAIN1    0x50
-#define BQ76940_REG_ADCGAIN2    0x51
-#define BQ76940_REG_ADCOFFSET   0x52
+#define BQ76940_REG_ADCOFFSET   0x51
+#define BQ76940_REG_ADCGAIN2    0x59
 
 #define BQ76940_SYS_CTRL1_ADC_EN    0x10
 #define BQ76940_SYS_CTRL1_TEMP_SEL  0x08
@@ -69,7 +79,7 @@
 
 // ==================== 外部接口 ====================
 uint8_t BQ76940_Init(void);                            // 初始化
-uint8_t BQ76940_ReadVoltage(float *volt_array);        // 读13串电压
+uint8_t BQ76940_ReadVoltage(float *volt_array);        // 读15串电压（无电芯通道按掩码置0）
 uint8_t BQ76940_ReadCurrent(float *current);           // 读总电流
 uint8_t BQ76940_ReadTemp(float *temp);                 // 读温度
 uint8_t BQ76940_ReadFault(uint8_t *fault);             // 读故障

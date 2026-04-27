@@ -27,7 +27,20 @@ Project File Date:  04/27/2026
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\Bin'
 Build target 'Template_STM32F103C8T6_Hal_20260425'
-".\BuildFile\BMS_48_pro.axf" - 0 Error(s), 0 Warning(s).
+compiling bsp_bq76940.c...
+..\BSP\BSP_Chip\bsp_bq76940.c(50): warning:  #111-D: statement is unreachable
+  	return BSP_I2C_Write_Byte(BQ76940_ADDR, reg, val);
+..\BSP\BSP_Chip\bsp_bq76940.c(54): warning:  #177-D: function "bq_read_buf"  was declared but never referenced
+  static uint8_t bq_read_buf(uint8_t reg, uint8_t *buf, uint8_t len)
+..\BSP\BSP_Chip\bsp_bq76940.c: 2 warnings, 0 errors
+compiling main.c...
+linking...
+Program Size: Code=16362 RO-data=910 RW-data=100 ZI-data=3132  
+FromELF: creating hex file...
+After Build - User command #1: fromelf --bin --output D:\01_Embedded\01_Project\BMS_48Pro_260425\Template_STM32F103C8T6_Hal_20260425\MDK-ARM\BuildFile
+Error: Q0120E: No input file specified.
+Finished: 0 information, 0 warning and 1 error messages.
+".\BuildFile\BMS_48_pro.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -51,7 +64,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.4.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:00
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>
