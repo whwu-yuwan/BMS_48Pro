@@ -1,12 +1,15 @@
-#ifndef __APP_TASKS_C
-#define __APP_TASKS_C
+#ifndef __APP_TASKS_H
+#define __APP_TASKS_H
 
+#include <stdint.h>
 #include "cmsis_os2.h"
 #include "iwdg.h"
+#include "bsp_bq76940.h"
 
 typedef struct {
-    float voltage;
+    float cell_voltage[BQ76940_CELL_NUM + 1]; // 15串 + 总电压
     float current;
+    float temp;//温度
     uint8_t soc;
     uint8_t is_fault;
 }BMS_Data_t;

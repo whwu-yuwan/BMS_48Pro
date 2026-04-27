@@ -111,7 +111,7 @@ static void BQ76940_Test_Poll(void)
   }
   last_print_ms = now;
 
-  float cell_v[BQ76940_CELL_NUM] = {0};
+  float cell_v[BQ76940_CELL_NUM + 1] = {0};
   float pack_i = 0.0f;
   float ts1_v = 0.0f;
   uint8_t fault = 0;

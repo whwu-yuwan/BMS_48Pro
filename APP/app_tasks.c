@@ -6,6 +6,7 @@
 #include "bms_config.h"
 #include "cmsis_os2.h"
 #include "iwdg.h"
+#include "bsp_bq76940.h"
 
 osSemaphoreId_t g_sem_fault_trigger = NULL;
 osMutexId_t g_mutex_data = NULL;
@@ -23,16 +24,27 @@ static osThreadId_t g_task_assist = NULL;
 void DataCollectTask(void *arg){
 	(void)arg;
 	for ( ; ; ){
+		float cell_v[BQ76940_CELL_NUM + 1] = {0};
+		osMutexAcquire(g_mutex_i2c, osWaitForever);
+		BQ76940_ReadVoltage(cell_v);
+		osMutexRelease(g_mutex_i2c);
+
 		osMutexAcquire(g_mutex_data, osWaitForever);
-		bms_data.voltage += 0.1f;
+		for (uint8_t i = 0; i < (uint8_t)(BQ76940_CELL_NUM + 1); i++)
+		{
+			bms_data.cell_voltage[i] = cell_v[i];
+		}
 		bms_data.current += 0.1f;
-		float voltage = bms_data.voltage;
+		bms_data.temp += 0.1f;
+		float temp = bms_data.temp;
 		float current = bms_data.current;
 		osMutexRelease(g_mutex_data);
-		if ((voltage >= 3) || (current >= 2)){
+		if ((temp >= 3) || (current >= 2)){
 			APP_Trigger_Fault_Task();
 		}
-		printf("[采样任务] 运行中... Tick: %u | 模拟读取13串电压:[%.2f]电流:[%.2f]温度:[]\r\n", osKernelGetTickCount(), voltage, current);
+		printf("[采样任务] 运行中... Tick: %u | 模拟读取15串总电压:[%.2f]电流:[%.2f]温度:[%.2f]\r\n",osKernelGetTickCount(),cell_v[BQ76940_CELL_NUM], current, temp);
+		printf("[采样任务] 运行中... Tick: %u | 读取电池1:[%.2f],电池2:[%.2f],电池3:[%.2f],电池4:[%.2f],电池5:[%.2f],电池6:[%.2f],电池7:[%.2f],电池8:[%.2f],电池9:[%.2f],电池10:[%.2f],电池11:[%.2f],电池12:[%.2f],电池13:[%.2f],电池14:[%.2f],电池15:[%.2f]\r\n",
+			 osKernelGetTickCount(), cell_v[0], cell_v[1], cell_v[2], cell_v[3], cell_v[4], cell_v[5], cell_v[6], cell_v[7], cell_v[8], cell_v[9], cell_v[10], cell_v[11], cell_v[12], cell_v[13], cell_v[14]);
 		osDelay(TASK_PERIOD_DATA_COLLECT);
 	}
 }
@@ -45,13 +57,13 @@ void FaultProtectTask(void *arg){
     {
 		if (osSemaphoreAcquire(g_sem_fault_trigger, osWaitForever) == osOK){
 			osMutexAcquire(g_mutex_data, osWaitForever);
-			voltage = bms_data.voltage;
+			voltage = bms_data.cell_voltage[BQ76940_CELL_NUM];
 			current = bms_data.current;
 			osMutexRelease(g_mutex_data);
 			if (voltage >= 3){
 				printf("[故障任务] 运行中... Tick: %u | 模拟检测故障状态: 过压[%.2f]\r\n", osKernelGetTickCount(), voltage);
 				osMutexAcquire(g_mutex_data, osWaitForever);
-				bms_data.voltage = 0.f;
+				bms_data.temp = 0.f;	
 				osMutexRelease(g_mutex_data);
 			}
 			if (current >= 2){
@@ -139,6 +151,7 @@ void APP_Trigger_Fault_Task(void)
 void APP_Task_Create(void){
 	g_sem_fault_trigger = osSemaphoreNew(5, 0, NULL);
 	g_mutex_data = osMutexNew(NULL);
+	g_mutex_i2c = osMutexNew(NULL);
 	
 	g_task_data_collect = osThreadNew(DataCollectTask, NULL, &(osThreadAttr_t){
 		.name = "DataCollectTask",
@@ -182,7 +195,6 @@ void APP_Task_Create(void){
 		.stack_size = TASK_STACK_ASSIST * 4,
 	});
 }
-
 
 
 
