@@ -44,4 +44,4 @@
 .\buildfile\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
 .\buildfile\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 .\buildfile\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
-.\buildfile\app_tasks.o: ..\Config\bms_config.h
+.\buildfile\app_tasks.o: ../Config/bms_config.h

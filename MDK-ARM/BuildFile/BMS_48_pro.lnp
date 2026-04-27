@@ -44,6 +44,7 @@
 ".\buildfile\bsp_uart.o"
 ".\buildfile\bsp_bq76940.o"
 ".\buildfile\app_tasks.o"
+".\buildfile\crc8.o"
 --strict --scatter ".\BuildFile\BMS_48_pro.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

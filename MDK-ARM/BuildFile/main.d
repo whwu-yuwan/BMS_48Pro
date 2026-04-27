@@ -48,5 +48,5 @@
 .\buildfile\main.o: ../Core/Inc/usart.h
 .\buildfile\main.o: ../Core/Inc/gpio.h
 .\buildfile\main.o: D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\Bin\..\include\stdio.h
-.\buildfile\main.o: ..\BSP\BSP_Chip\bsp_bq76940.h
-.\buildfile\main.o: ..\BSP\BSP_Peripheral\bsp_i2c.h
+.\buildfile\main.o: ../BSP/BSP_Chip/bsp_bq76940.h
+.\buildfile\main.o: ../BSP/BSP_Peripheral/bsp_i2c.h

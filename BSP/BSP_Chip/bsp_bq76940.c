@@ -1,21 +1,51 @@
 #include "bsp_bq76940.h"
-#include "stdio.h"
 
 static uint16_t g_bq_gain_uV = 365;
 static int16_t g_bq_offset_mV = 0;
+static uint8_t g_bq_read_use_pec = (uint8_t)BQ76940_USE_PEC;
+
+static void bq_wake_pulse(void)
+{
+	if (!BQ76940_USE_WAKE_PIN)
+	{
+		return;
+	}
+
+	HAL_GPIO_WritePin(BQ76940_WAKE_GPIO_PORT, BQ76940_WAKE_GPIO_PIN, GPIO_PIN_RESET);
+	HAL_Delay((uint32_t)BQ76940_WAKE_LOW_MS);
+	HAL_GPIO_WritePin(BQ76940_WAKE_GPIO_PORT, BQ76940_WAKE_GPIO_PIN, GPIO_PIN_SET);
+	HAL_Delay((uint32_t)BQ76940_WAKE_HIGH_MS);
+	if (!BQ76940_WAKE_END_HIGH)
+	{
+		HAL_GPIO_WritePin(BQ76940_WAKE_GPIO_PORT, BQ76940_WAKE_GPIO_PIN, GPIO_PIN_RESET);
+	}
+	HAL_Delay((uint32_t)BQ76940_WAKE_POST_MS);
+}
 
 static uint8_t bq_read_u8(uint8_t reg, uint8_t *val)
 {
+	if (g_bq_read_use_pec)
+	{
+		return BSP_I2C_Read_Byte_PEC(BQ76940_ADDR, reg, val);
+	}
 	return BSP_I2C_Read_Byte(BQ76940_ADDR, reg, val);
 }
 
 static uint8_t bq_write_u8(uint8_t reg, uint8_t val)
 {
+	if (BQ76940_USE_PEC)
+	{
+		return BSP_I2C_Write_Byte_PEC(BQ76940_ADDR, reg, val);
+	}
 	return BSP_I2C_Write_Byte(BQ76940_ADDR, reg, val);
 }
 
 static uint8_t bq_read_buf(uint8_t reg, uint8_t *buf, uint8_t len)
 {
+	if (g_bq_read_use_pec)
+	{
+		return BSP_I2C_Read_Buffer_PEC(BQ76940_ADDR, reg, buf, len);
+	}
 	return BSP_I2C_Read_Buffer(BQ76940_ADDR, reg, buf, len);
 }
 
@@ -28,9 +58,11 @@ static float bq_adc_raw_to_mV(uint16_t raw14)
 
 uint8_t BQ76940_Init(void)
 {
+	bq_wake_pulse();
+	g_bq_read_use_pec = (uint8_t)BQ76940_USE_PEC;
+
 	if (BSP_I2C_IsDeviceReady(BQ76940_ADDR) != 0)
 	{
-        printf("BQ76940 not found\r\n");
 		return 1;
 	}
 
@@ -40,17 +72,25 @@ uint8_t BQ76940_Init(void)
 
 	if (bq_read_u8(BQ76940_REG_ADCGAIN1, &gain1) != 0)
 	{
-        printf("BQ76940 read ADCGAIN1 failed\r\n");
-		return 1;
+		if (g_bq_read_use_pec)
+		{
+			g_bq_read_use_pec = 0;
+			if (bq_read_u8(BQ76940_REG_ADCGAIN1, &gain1) != 0)
+			{
+				return 1;
+			}
+		}
+		else
+		{
+			return 1;
+		}
 	}
 	if (bq_read_u8(BQ76940_REG_ADCGAIN2, &gain2) != 0)
 	{
-        printf("BQ76940 read ADCGAIN2 failed\r\n");
 		return 1;
 	}
 	if (bq_read_u8(BQ76940_REG_ADCOFFSET, &offset) != 0)
 	{
-        printf("BQ76940 read ADCOFFSET failed\r\n");
 		return 1;
 	}
 
@@ -62,13 +102,11 @@ uint8_t BQ76940_Init(void)
 	uint8_t sys_ctrl2 = 0;
 
 	if (bq_read_u8(BQ76940_REG_SYS_CTRL1, &sys_ctrl1) != 0)
-	{
-        printf("BQ76940 read SYS_CTRL1 failed\r\n");
+	{	
 		return 1;
 	}
 	if (bq_read_u8(BQ76940_REG_SYS_CTRL2, &sys_ctrl2) != 0)
 	{
-        printf("BQ76940 read SYS_CTRL2 failed\r\n");
 		return 1;
 	}
 
@@ -77,12 +115,10 @@ uint8_t BQ76940_Init(void)
 
 	if (bq_write_u8(BQ76940_REG_SYS_CTRL1, sys_ctrl1) != 0)
 	{
-        printf("BQ76940 write SYS_CTRL1 failed\r\n");
 		return 1;
 	}
 	if (bq_write_u8(BQ76940_REG_SYS_CTRL2, sys_ctrl2) != 0)
 	{
-        printf("BQ76940 write SYS_CTRL2 failed\r\n");
 		return 1;
 	}
 

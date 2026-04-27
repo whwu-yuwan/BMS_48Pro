@@ -33,3 +33,4 @@
 .\buildfile\bsp_i2c.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 .\buildfile\bsp_i2c.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 .\buildfile\bsp_i2c.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+.\buildfile\bsp_i2c.o: ..\Util\crc8.h

@@ -42,5 +42,5 @@
 .\buildfile\freertos.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
 .\buildfile\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h
 .\buildfile\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
-.\buildfile\freertos.o: ..\APP\app_tasks.h
+.\buildfile\freertos.o: ../APP/app_tasks.h
 .\buildfile\freertos.o: ../Core/Inc/iwdg.h

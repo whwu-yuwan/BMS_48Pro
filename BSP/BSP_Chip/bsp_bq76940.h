@@ -8,6 +8,38 @@
 #define BQ76940_ADDR            0x08    // BQ76940 I2C地址
 #define BQ76940_CELL_NUM        13      // 13串
 
+#ifndef BQ76940_USE_PEC
+#define BQ76940_USE_PEC 1
+#endif
+
+#ifndef BQ76940_USE_WAKE_PIN
+#define BQ76940_USE_WAKE_PIN 1
+#endif
+
+#ifndef BQ76940_WAKE_GPIO_PORT
+#define BQ76940_WAKE_GPIO_PORT GPIOA
+#endif
+
+#ifndef BQ76940_WAKE_GPIO_PIN
+#define BQ76940_WAKE_GPIO_PIN GPIO_PIN_8
+#endif
+
+#ifndef BQ76940_WAKE_LOW_MS
+#define BQ76940_WAKE_LOW_MS 2u
+#endif
+
+#ifndef BQ76940_WAKE_HIGH_MS
+#define BQ76940_WAKE_HIGH_MS 2u
+#endif
+
+#ifndef BQ76940_WAKE_POST_MS
+#define BQ76940_WAKE_POST_MS 10u
+#endif
+
+#ifndef BQ76940_WAKE_END_HIGH
+#define BQ76940_WAKE_END_HIGH 1
+#endif
+
 #define BQ76940_REG_SYS_STAT    0x00
 #define BQ76940_REG_SYS_CTRL1   0x04
 #define BQ76940_REG_SYS_CTRL2   0x05
