@@ -1,7 +1,7 @@
 .\buildfile\app_tasks.o: ..\APP\app_tasks.c
 .\buildfile\app_tasks.o: ..\APP\app_tasks.h
-.\buildfile\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
 .\buildfile\app_tasks.o: D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\Bin\..\include\stdint.h
+.\buildfile\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
 .\buildfile\app_tasks.o: D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\Bin\..\include\stddef.h
 .\buildfile\app_tasks.o: ../Core/Inc/iwdg.h
 .\buildfile\app_tasks.o: ../Core/Inc/main.h
@@ -34,6 +34,8 @@
 .\buildfile\app_tasks.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 .\buildfile\app_tasks.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 .\buildfile\app_tasks.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+.\buildfile\app_tasks.o: ../BSP/BSP_Chip/bsp_bq76940.h
+.\buildfile\app_tasks.o: ../BSP/BSP_Peripheral/bsp_i2c.h
 .\buildfile\app_tasks.o: D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\Bin\..\include\stdio.h
 .\buildfile\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
 .\buildfile\app_tasks.o: ../Core/Inc/FreeRTOSConfig.h

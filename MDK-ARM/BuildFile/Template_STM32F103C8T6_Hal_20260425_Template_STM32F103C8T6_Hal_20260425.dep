@@ -1,7 +1,7 @@
 Dependencies for Project 'Template_STM32F103C8T6_Hal_20260425', Target 'Template_STM32F103C8T6_Hal_20260425': (DO NOT MODIFY !)
 CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARMCC
 F (startup_stm32f103xb.s)(0x69EE0D89)(--cpu Cortex-M3 -g --apcs=interwork -I ../Drivers/CMSIS/Include-I.\RTE\_Template_STM32F103C8T6_Hal_20260425-ID:\01_Embedded\04_Tool\keil5\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\01_Embedded\04_Tool\keil5\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include--pd "__UVISION_VERSION SETA 534" --pd "_RTE_ SETA 1" --pd "STM32F10X_MD SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32f103xb.lst --xref -o .\buildfile\startup_stm32f103xb.o --depend .\buildfile\startup_stm32f103xb.d)
-F (../Core/Src/main.c)(0x69EF1E1C)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../Config -I ../APP -I ../BSP/BSP_Peripheral -I ../BSP/BSP_Chip -I ..\Util-I.\RTE\_Template_STM32F103C8T6_Hal_20260425-ID:\01_Embedded\04_Tool\keil5\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\01_Embedded\04_Tool\keil5\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o .\buildfile\main.o --omf_browse .\buildfile\main.crf --depend .\buildfile\main.d)
+F (../Core/Src/main.c)(0x69F08BF0)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../Config -I ../APP -I ../BSP/BSP_Peripheral -I ../BSP/BSP_Chip -I ..\Util-I.\RTE\_Template_STM32F103C8T6_Hal_20260425-ID:\01_Embedded\04_Tool\keil5\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\01_Embedded\04_Tool\keil5\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o .\buildfile\main.o --omf_browse .\buildfile\main.crf --depend .\buildfile\main.d)
 I (../Core/Inc/main.h)(0x69EC79B3)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x69EC79AC)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x69EC8E4B)
@@ -50,8 +50,9 @@ I (../Core/Inc/iwdg.h)(0x69ECB348)
 I (../Core/Inc/usart.h)(0x69ECB348)
 I (../Core/Inc/gpio.h)(0x69ECB345)
 I (D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\include\stdio.h)(0x5E8E3CC2)
-I (../BSP/BSP_Chip/bsp_bq76940.h)(0x69EF2291)
+I (../BSP/BSP_Chip/bsp_bq76940.h)(0x69F1BFF9)
 I (../BSP/BSP_Peripheral/bsp_i2c.h)(0x69EEEE89)
+I (..\Util\crc8.h)(0x69F08501)
 F (../Core/Src/gpio.c)(0x69EE0D82)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../Config -I ../APP -I ../BSP/BSP_Peripheral -I ../BSP/BSP_Chip -I ..\Util-I.\RTE\_Template_STM32F103C8T6_Hal_20260425-ID:\01_Embedded\04_Tool\keil5\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\01_Embedded\04_Tool\keil5\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o .\buildfile\gpio.o --omf_browse .\buildfile\gpio.crf --depend .\buildfile\gpio.d)
 I (../Core/Inc/gpio.h)(0x69ECB345)
 I (../Core/Inc/main.h)(0x69EC79B3)
@@ -128,8 +129,10 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x69EC79AC)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x69EC79AC)
 I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h)(0x69EC79AE)
 I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h)(0x69EC79AE)
-I (../APP/app_tasks.h)(0x69EDE3CA)
+I (../APP/app_tasks.h)(0x69F0436E)
 I (../Core/Inc/iwdg.h)(0x69ECB348)
+I (../BSP/BSP_Chip/bsp_bq76940.h)(0x69F1BFF9)
+I (../BSP/BSP_Peripheral/bsp_i2c.h)(0x69EEEE89)
 F (../Core/Src/can.c)(0x69ECB347)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../Config -I ../APP -I ../BSP/BSP_Peripheral -I ../BSP/BSP_Chip -I ..\Util-I.\RTE\_Template_STM32F103C8T6_Hal_20260425-ID:\01_Embedded\04_Tool\keil5\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\01_Embedded\04_Tool\keil5\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o .\buildfile\can.o --omf_browse .\buildfile\can.crf --depend .\buildfile\can.d)
 I (../Core/Inc/can.h)(0x69ECB348)
 I (../Core/Inc/main.h)(0x69EC79B3)
@@ -1094,7 +1097,7 @@ F (..\BSP\BSP_Peripheral\bsp_can.c)(0x69ECB11E)(--c99 -c --cpu Cortex-M3 -g -O3 
 F (..\BSP\BSP_Peripheral\bsp_can.h)(0x69ECB112)()
 F (..\BSP\BSP_Peripheral\bsp_gpio.c)(0x69ECB004)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../Config -I ../APP -I ../BSP/BSP_Peripheral -I ../BSP/BSP_Chip -I ..\Util-I.\RTE\_Template_STM32F103C8T6_Hal_20260425-ID:\01_Embedded\04_Tool\keil5\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\01_Embedded\04_Tool\keil5\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o .\buildfile\bsp_gpio.o --omf_browse .\buildfile\bsp_gpio.crf --depend .\buildfile\bsp_gpio.d)
 F (..\BSP\BSP_Peripheral\bsp_gpio.h)(0x69ECB018)()
-F (..\BSP\BSP_Peripheral\bsp_i2c.c)(0x69EEF3C6)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../Config -I ../APP -I ../BSP/BSP_Peripheral -I ../BSP/BSP_Chip -I ..\Util-I.\RTE\_Template_STM32F103C8T6_Hal_20260425-ID:\01_Embedded\04_Tool\keil5\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\01_Embedded\04_Tool\keil5\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o .\buildfile\bsp_i2c.o --omf_browse .\buildfile\bsp_i2c.crf --depend .\buildfile\bsp_i2c.d)
+F (..\BSP\BSP_Peripheral\bsp_i2c.c)(0x69F081CE)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../Config -I ../APP -I ../BSP/BSP_Peripheral -I ../BSP/BSP_Chip -I ..\Util-I.\RTE\_Template_STM32F103C8T6_Hal_20260425-ID:\01_Embedded\04_Tool\keil5\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\01_Embedded\04_Tool\keil5\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o .\buildfile\bsp_i2c.o --omf_browse .\buildfile\bsp_i2c.crf --depend .\buildfile\bsp_i2c.d)
 I (..\BSP\BSP_Peripheral\bsp_i2c.h)(0x69EEEE89)
 I (D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\include\stdint.h)(0x5E8E3CC2)
 I (../Core/Inc/i2c.h)(0x69ECB348)
@@ -1128,13 +1131,13 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x69EC79AC)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h)(0x69EC79AC)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x69EC79AC)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x69EC79AC)
-I (..\Util\crc8.h)(0x69EEED20)
+I (..\Util\crc8.h)(0x69F08501)
 F (..\BSP\BSP_Peripheral\bsp_i2c.h)(0x69EEEE89)()
 F (..\BSP\BSP_Peripheral\bsp_uart.c)(0x69ECB141)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../Config -I ../APP -I ../BSP/BSP_Peripheral -I ../BSP/BSP_Chip -I ..\Util-I.\RTE\_Template_STM32F103C8T6_Hal_20260425-ID:\01_Embedded\04_Tool\keil5\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\01_Embedded\04_Tool\keil5\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o .\buildfile\bsp_uart.o --omf_browse .\buildfile\bsp_uart.crf --depend .\buildfile\bsp_uart.d)
 F (..\BSP\BSP_Peripheral\bsp_uart.h)(0x69ECB12D)()
-F (..\BSP\BSP_Chip\bsp_bq76940.h)(0x69EF2291)()
-F (..\BSP\BSP_Chip\bsp_bq76940.c)(0x69EF22DF)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../Config -I ../APP -I ../BSP/BSP_Peripheral -I ../BSP/BSP_Chip -I ..\Util-I.\RTE\_Template_STM32F103C8T6_Hal_20260425-ID:\01_Embedded\04_Tool\keil5\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\01_Embedded\04_Tool\keil5\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o .\buildfile\bsp_bq76940.o --omf_browse .\buildfile\bsp_bq76940.crf --depend .\buildfile\bsp_bq76940.d)
-I (..\BSP\BSP_Chip\bsp_bq76940.h)(0x69EF2291)
+F (..\BSP\BSP_Chip\bsp_bq76940.h)(0x69F1BFF9)()
+F (..\BSP\BSP_Chip\bsp_bq76940.c)(0x69F1CA2A)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../Config -I ../APP -I ../BSP/BSP_Peripheral -I ../BSP/BSP_Chip -I ..\Util-I.\RTE\_Template_STM32F103C8T6_Hal_20260425-ID:\01_Embedded\04_Tool\keil5\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\01_Embedded\04_Tool\keil5\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o .\buildfile\bsp_bq76940.o --omf_browse .\buildfile\bsp_bq76940.crf --depend .\buildfile\bsp_bq76940.d)
+I (..\BSP\BSP_Chip\bsp_bq76940.h)(0x69F1BFF9)
 I (../Core/Inc/main.h)(0x69EC79B3)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x69EC79AC)
 I (../Core/Inc/stm32f1xx_hal_conf.h)(0x69EC8E4B)
@@ -1167,10 +1170,11 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h)(0x69EC79AC)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x69EC79AC)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x69EC79AC)
 I (../BSP/BSP_Peripheral/bsp_i2c.h)(0x69EEEE89)
-F (..\APP\app_tasks.c)(0x69EEF3C5)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../Config -I ../APP -I ../BSP/BSP_Peripheral -I ../BSP/BSP_Chip -I ..\Util-I.\RTE\_Template_STM32F103C8T6_Hal_20260425-ID:\01_Embedded\04_Tool\keil5\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\01_Embedded\04_Tool\keil5\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o .\buildfile\app_tasks.o --omf_browse .\buildfile\app_tasks.crf --depend .\buildfile\app_tasks.d)
-I (..\APP\app_tasks.h)(0x69EDE3CA)
-I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h)(0x69EC79AE)
+I (D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\include\math.h)(0x5E8E3CC2)
+F (..\APP\app_tasks.c)(0x69F0784D)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../Config -I ../APP -I ../BSP/BSP_Peripheral -I ../BSP/BSP_Chip -I ..\Util-I.\RTE\_Template_STM32F103C8T6_Hal_20260425-ID:\01_Embedded\04_Tool\keil5\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\01_Embedded\04_Tool\keil5\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o .\buildfile\app_tasks.o --omf_browse .\buildfile\app_tasks.crf --depend .\buildfile\app_tasks.d)
+I (..\APP\app_tasks.h)(0x69F0436E)
 I (D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\include\stdint.h)(0x5E8E3CC2)
+I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h)(0x69EC79AE)
 I (D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\include\stddef.h)(0x5E8E3CC2)
 I (../Core/Inc/iwdg.h)(0x69ECB348)
 I (../Core/Inc/main.h)(0x69EC79B3)
@@ -1202,6 +1206,8 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h)(0x69EC79AC)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h)(0x69EC79AC)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x69EC79AC)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h)(0x69EC79AC)
+I (../BSP/BSP_Chip/bsp_bq76940.h)(0x69F1BFF9)
+I (../BSP/BSP_Peripheral/bsp_i2c.h)(0x69EEEE89)
 I (D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\include\stdio.h)(0x5E8E3CC2)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x69EC79AE)
 I (../Core/Inc/FreeRTOSConfig.h)(0x69EE0D84)
@@ -1213,10 +1219,10 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x69EC79AE
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x69EC79AE)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x69EC79AE)
 I (../Config/bms_config.h)(0x69EDB6F9)
-F (..\APP\app_tasks.h)(0x69EDE3CA)()
+F (..\APP\app_tasks.h)(0x69F0436E)()
 F (..\Config\bms_config.h)(0x69EDB6F9)()
-F (..\Util\crc8.c)(0x69EEED35)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../Config -I ../APP -I ../BSP/BSP_Peripheral -I ../BSP/BSP_Chip -I ..\Util-I.\RTE\_Template_STM32F103C8T6_Hal_20260425-ID:\01_Embedded\04_Tool\keil5\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\01_Embedded\04_Tool\keil5\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o .\buildfile\crc8.o --omf_browse .\buildfile\crc8.crf --depend .\buildfile\crc8.d)
-I (..\Util\crc8.h)(0x69EEED20)
+F (..\Util\crc8.c)(0x69F0850D)(--c99 -c --cpu Cortex-M3 -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I ../Drivers/STM32F1xx_HAL_Driver/Inc -I ../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3 -I ../Config -I ../APP -I ../BSP/BSP_Peripheral -I ../BSP/BSP_Chip -I ..\Util-I.\RTE\_Template_STM32F103C8T6_Hal_20260425-ID:\01_Embedded\04_Tool\keil5\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include-ID:\01_Embedded\04_Tool\keil5\Packs\Keil\STM32F1xx_DFP\2.4.1\Device\Include-D__UVISION_VERSION="534" -D_RTE_ -DSTM32F10X_MD -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F103xB-o .\buildfile\crc8.o --omf_browse .\buildfile\crc8.crf --depend .\buildfile\crc8.d)
+I (..\Util\crc8.h)(0x69F08501)
 I (D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\include\stddef.h)(0x5E8E3CC2)
 I (D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\include\stdint.h)(0x5E8E3CC2)
-F (..\Util\crc8.h)(0x69EEED20)()
+F (..\Util\crc8.h)(0x69F08501)()

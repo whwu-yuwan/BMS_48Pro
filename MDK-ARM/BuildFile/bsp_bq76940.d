@@ -33,3 +33,4 @@
 .\buildfile\bsp_bq76940.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 .\buildfile\bsp_bq76940.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
 .\buildfile\bsp_bq76940.o: ../BSP/BSP_Peripheral/bsp_i2c.h
+.\buildfile\bsp_bq76940.o: D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\Bin\..\include\math.h

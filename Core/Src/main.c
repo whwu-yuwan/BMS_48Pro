@@ -29,6 +29,7 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include "bsp_bq76940.h"
+#include "crc8.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -64,6 +65,29 @@ static void BQ76940_Test_Poll(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 static uint8_t g_bq_inited = 0;
+
+// 计算PEC
+static uint8_t bq_calc_pec_read_u8(uint8_t dev_addr, uint8_t reg, uint8_t data)
+{
+  uint8_t crc = 0x00u;
+  uint8_t addr = ((dev_addr << 1) | 1u);
+  crc = CRC8_Update(crc, &addr, 1u, 0x07u);
+  crc = CRC8_Update(crc, &data, 1u, 0x07u);
+  return crc;
+}
+
+// 打印寄存器值，包含PEC
+static void bq_dump_reg_u8_with_pec(uint8_t reg)
+{
+  uint8_t rx[2] = {0};
+  if (BSP_I2C_Read_Buffer(BQ76940_ADDR, reg, rx, 2u) != 0)
+  {
+    printf("R[0x%02X]: read fail\r\n", reg);
+    return;
+  }
+  uint8_t exp = bq_calc_pec_read_u8(BQ76940_ADDR, reg, rx[0]);
+  printf("R[0x%02X]: D=%02X PEC=%02X EXP=%02X OK=%u\r\n", reg, rx[0], rx[1], exp, (rx[1] == exp) ? 1u : 0u);
+}
 
 static void BQ76940_Test_Init(void)
 {
@@ -193,8 +217,8 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   printf("Start...\r\n");
-
   BQ76940_Test_Init();
+  
   
   
   /* USER CODE END 2 */
@@ -215,7 +239,13 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    BQ76940_Test_Poll();
+    //BQ76940_Test_Poll();
+	
+	  bq_dump_reg_u8_with_pec(BQ76940_REG_VC1_HI);
+    bq_dump_reg_u8_with_pec((uint8_t)(BQ76940_REG_VC1_HI + 1u));
+	
+	HAL_IWDG_Refresh(&hiwdg);
+	HAL_Delay(50);
   }
   /* USER CODE END 3 */
 }

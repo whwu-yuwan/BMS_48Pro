@@ -1,4 +1,5 @@
 #include "bsp_bq76940.h"
+#include "math.h"
 
 /*
  * BQ76940 驱动说明：
@@ -18,7 +19,6 @@ static void bq_wake_pulse(void)
 	{
 		return;
 	}
-
 	HAL_GPIO_WritePin(BQ76940_WAKE_GPIO_PORT, BQ76940_WAKE_GPIO_PIN, GPIO_PIN_RESET);
 	HAL_Delay((uint32_t)BQ76940_WAKE_LOW_MS);
 	HAL_GPIO_WritePin(BQ76940_WAKE_GPIO_PORT, BQ76940_WAKE_GPIO_PIN, GPIO_PIN_SET);
@@ -60,6 +60,8 @@ static uint8_t bq_read_u16(uint8_t reg_hi, uint16_t *val)
 	return 0;
 }
 
+
+
 /* 写 1 字节寄存器：按 BQ76940_USE_PEC 决定是否附带 PEC */
 static uint8_t bq_write_u8(uint8_t reg, uint8_t val)
 {
@@ -78,22 +80,44 @@ static float bq_adc_raw_to_mV(uint16_t raw14)
 	return mV;
 }
 
-uint8_t BQ76940_Init(void)
-{
-	/* 上电后先唤醒器件（需要 WAKE 上升沿/脉冲时启用） */
-	bq_wake_pulse();
-
-	/* 探测 I2C 设备是否应答 */
-	if (BSP_I2C_IsDeviceReady(BQ76940_ADDR) != 0)
+/* 16-bit ADC 原始值转换为mA: */
+static float bq_adc_raw_to_mA(int16_t raw16, float resistor, float LSB){
+	float v_sense = ((float)raw16 * (LSB * 1e-6f));
+	float r_shunt = resistor * 1e-3f;
+	if (r_shunt <= 0.0f)
 	{
 		return 1;
 	}
+	return v_sense / r_shunt;
+}
 
-	uint8_t gain1 = 0;
-	uint8_t gain2 = 0;
-	uint8_t offset = 0;
+static float bq_adc_mV_to_oC(float ntc_mv) {
+	
+    const float R_PULL  = 10000.0f;   // 内置上拉电阻
+    const float VCC_MV  = 3300.0f;    // 上拉电源
+    const float R0      = 10000.0f;   // 25℃ NTC阻值
+    const float B_VALUE = 3950.0f;    // NTC B值
+    const float T0      = 298.15f;    // 25℃ 开尔文温度
 
+    // 防除零
+    if(ntc_mv >= VCC_MV) ntc_mv = VCC_MV - 1;
+    if(ntc_mv < 0) ntc_mv = 0;
+
+    // 1. 电压 → NTC电阻
+    float r_ntc = R_PULL * ntc_mv / (VCC_MV - ntc_mv);
+
+    // 2. 电阻 → 温度
+    float ln = logf(r_ntc / R0);
+    float temp_k = 1.0f / ((1.0f/T0) + (ln/B_VALUE));
+    return temp_k - 273.15f;
+}
+
+
+static uint8_t bq_get_gain12_offset(uint16_t *g_gain, int16_t *g_offset) {
 	/* 读取 ADC 增益/偏移用于后续电压/温度换算 */
+	uint8_t gain1;
+	uint8_t gain2;
+	uint8_t offset;
 	if (bq_read_u8(BQ76940_REG_ADCGAIN1, &gain1) != 0)
 	{
 		return 1;
@@ -106,13 +130,23 @@ uint8_t BQ76940_Init(void)
 	{
 		return 1;
 	}
-
 	/* ADCGAIN<4:0> = ADCGAIN1[6:5](=bits4..3) + ADCGAIN2[7:5](=bits2..0)，单位 uV/LSB */
 	uint8_t gain_code = (uint8_t)((((gain1 >> 5) & 0x03u) << 3) | ((gain2 >> 5) & 0x07u));
-	g_bq_gain_uV = (uint16_t)(365u + (uint16_t)gain_code);
+	*g_gain = (uint16_t)(365u + (uint16_t)gain_code);
 	/* ADCOFFSET 为有符号 8-bit，单位 mV */
-	g_bq_offset_mV = (int16_t)(int8_t)offset;
+	*g_offset = (int16_t)(int8_t)offset;
+	return 0;
+}
 
+static uint8_t bq_isBQ76940Ready(void){
+	if (BSP_I2C_IsDeviceReady(BQ76940_ADDR) != 0)
+	{
+		return 1;
+	}
+	return 0;
+}
+
+static uint8_t bq_config_ctrl1_2(void){
 	uint8_t sys_ctrl1 = 0;
 	uint8_t sys_ctrl2 = 0;
 
@@ -137,7 +171,25 @@ uint8_t BQ76940_Init(void)
 	{
 		return 1;
 	}
+	return 0;
+}
 
+uint8_t BQ76940_Init(void)
+{
+	//上电后先唤醒器件（需要 WAKE 上升沿/脉冲时启用）
+	bq_wake_pulse();
+	//探测 I2C 设备是否应答 
+	if (bq_isBQ76940Ready() != 0){
+		return 1;
+	}
+	//获取gain和offset
+	if (bq_get_gain12_offset(&g_bq_gain_uV, &g_bq_offset_mV) != 0){
+		return 1;
+	}
+	//初始化ctrl1_2
+	if (bq_config_ctrl1_2() != 0){
+		return 1;
+	}
 	return 0;
 }
 
@@ -187,14 +239,8 @@ uint8_t BQ76940_ReadCurrent(float *current)
 
 	/* CC 为有符号 16-bit；转换为 Vsense 后除以分流电阻得到电流 */
 	int16_t raw = (int16_t)u16;
-	float v_sense = ((float)raw * (BQ76940_CC_LSB_UV * 1e-6f));
-	float r_shunt = BQ76940_SHUNT_RESISTOR_MOHM * 1e-3f;
-	if (r_shunt <= 0.0f)
-	{
-		return 1;
-	}
+	*current = bq_adc_raw_to_mA(raw, BQ76940_SHUNT_RESISTOR_MOHM, BQ76940_CC_LSB_UV);
 
-	*current = v_sense / r_shunt;
 	return 0;
 }
 
@@ -212,7 +258,8 @@ uint8_t BQ76940_ReadTemp(float *temp)
 		return 1;
 	}
 	raw &= 0x3FFFu;
-	*temp = bq_adc_raw_to_mV(raw) / 1000.0f;
+	*temp = bq_adc_raw_to_mV(raw);
+	*temp = bq_adc_mV_to_oC(*temp);
 	return 0;
 }
 
@@ -223,7 +270,6 @@ uint8_t BQ76940_ReadFault(uint8_t *fault)
 	{
 		return 1;
 	}
-
 	return bq_read_u8(BQ76940_REG_SYS_STAT, fault);
 }
 

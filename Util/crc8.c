@@ -38,3 +38,12 @@ uint8_t CRC8_SMBusPEC(const uint8_t *data, size_t len)
 {
 	return CRC8_Calc(data, len, 0x00u, 0x07u, 0x00u);
 }
+
+uint8_t CRC8_BQ769x0_ReadPEC(uint8_t addr7, const uint8_t *data, size_t len)
+{
+	uint8_t crc = 0x00u;
+	uint8_t addr_r = (uint8_t)((addr7 << 1) | 0x01u);
+	crc = CRC8_Update(crc, &addr_r, 1u, 0x07u);
+	crc = CRC8_Update(crc, data, len, 0x07u);
+	return crc;
+}

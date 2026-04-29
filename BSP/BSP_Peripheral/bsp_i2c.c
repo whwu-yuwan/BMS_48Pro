@@ -35,6 +35,7 @@ uint8_t BSP_I2C_Write_Byte(uint8_t dev_addr, uint8_t reg, uint8_t data) {
 uint8_t BSP_I2C_Read_Byte(uint8_t dev_addr, uint8_t reg, uint8_t *data) {
 	if (data == NULL)
 	{
+		printf("BSP_I2C_Read_Byte: data is NULL\r\n");
 		return 1;
 	}
 	if (HAL_I2C_Mem_Read(&hi2c1, (uint16_t)(dev_addr << 1), reg, I2C_MEMADD_SIZE_8BIT, data, 1, 1000) == HAL_OK)
@@ -47,12 +48,14 @@ uint8_t BSP_I2C_Read_Byte(uint8_t dev_addr, uint8_t reg, uint8_t *data) {
 uint8_t BSP_I2C_Read_Buffer(uint8_t dev_addr, uint8_t reg, uint8_t *buf, uint8_t len) {
 	if ((buf == NULL) || (len == 0))
 	{
+		printf("BSP_I2C_Read_Buffer: buf is NULL or len is 0\r\n");
 		return 1;
 	}
 	if (HAL_I2C_Mem_Read(&hi2c1, (uint16_t)(dev_addr << 1), reg, I2C_MEMADD_SIZE_8BIT, buf, len, 1000) == HAL_OK)
 	{
 		return 0;
 	}
+	printf("error");
 	return 1;
 }
 

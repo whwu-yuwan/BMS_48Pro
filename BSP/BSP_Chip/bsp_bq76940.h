@@ -18,37 +18,16 @@
 #endif
 
 /* 读寄存器是否使用 PEC 校验：0=不使用，1=使用 */
-#ifndef BQ76940_READ_USE_PEC
 #define BQ76940_READ_USE_PEC 0
-#endif
 
-#ifndef BQ76940_USE_WAKE_PIN
 #define BQ76940_USE_WAKE_PIN 1
-#endif
-
-#ifndef BQ76940_WAKE_GPIO_PORT
 #define BQ76940_WAKE_GPIO_PORT GPIOA
-#endif
-
-#ifndef BQ76940_WAKE_GPIO_PIN
 #define BQ76940_WAKE_GPIO_PIN GPIO_PIN_8
-#endif
-
-#ifndef BQ76940_WAKE_LOW_MS
 #define BQ76940_WAKE_LOW_MS 2u
-#endif
-
-#ifndef BQ76940_WAKE_HIGH_MS
 #define BQ76940_WAKE_HIGH_MS 2u
-#endif
-
-#ifndef BQ76940_WAKE_POST_MS
 #define BQ76940_WAKE_POST_MS 10u
-#endif
-
-#ifndef BQ76940_WAKE_END_HIGH
 #define BQ76940_WAKE_END_HIGH 1
-#endif
+
 
 #define BQ76940_REG_SYS_STAT    0x00
 #define BQ76940_REG_SYS_CTRL1   0x04
@@ -70,7 +49,7 @@
 #define BQ76940_SYS_CTRL2_CC_EN     0x40
 
 #ifndef BQ76940_SHUNT_RESISTOR_MOHM
-#define BQ76940_SHUNT_RESISTOR_MOHM 1.0f
+#define BQ76940_SHUNT_RESISTOR_MOHM 4.0f
 #endif
 
 #ifndef BQ76940_CC_LSB_UV

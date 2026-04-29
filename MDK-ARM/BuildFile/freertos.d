@@ -44,3 +44,5 @@
 .\buildfile\freertos.o: ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h
 .\buildfile\freertos.o: ../APP/app_tasks.h
 .\buildfile\freertos.o: ../Core/Inc/iwdg.h
+.\buildfile\freertos.o: ../BSP/BSP_Chip/bsp_bq76940.h
+.\buildfile\freertos.o: ../BSP/BSP_Peripheral/bsp_i2c.h

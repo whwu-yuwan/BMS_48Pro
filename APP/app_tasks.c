@@ -23,10 +23,12 @@ static osThreadId_t g_task_assist = NULL;
 
 void DataCollectTask(void *arg){
 	(void)arg;
+	float cell_v[BQ76940_CELL_NUM + 1] = {0};
+	float current;
 	for ( ; ; ){
-		float cell_v[BQ76940_CELL_NUM + 1] = {0};
 		osMutexAcquire(g_mutex_i2c, osWaitForever);
 		BQ76940_ReadVoltage(cell_v);
+		BQ76940_ReadCurrent(&current);
 		osMutexRelease(g_mutex_i2c);
 
 		osMutexAcquire(g_mutex_data, osWaitForever);
@@ -34,7 +36,7 @@ void DataCollectTask(void *arg){
 		{
 			bms_data.cell_voltage[i] = cell_v[i];
 		}
-		bms_data.current += 0.1f;
+		bms_data.current = current;
 		bms_data.temp += 0.1f;
 		float temp = bms_data.temp;
 		float current = bms_data.current;
@@ -42,7 +44,8 @@ void DataCollectTask(void *arg){
 		if ((temp >= 3) || (current >= 2)){
 			APP_Trigger_Fault_Task();
 		}
-		printf("[采样任务] 运行中... Tick: %u | 模拟读取15串总电压:[%.2f]电流:[%.2f]温度:[%.2f]\r\n",osKernelGetTickCount(),cell_v[BQ76940_CELL_NUM], current, temp);
+		printf("[采样任务] 运行中... Tick: %u | 模拟读取15串总电压:[%.2f]电流:[%.2f]温度:[%.2f]\r\n",
+			osKernelGetTickCount(),cell_v[BQ76940_CELL_NUM], current, temp);
 		printf("[采样任务] 运行中... Tick: %u | 读取电池1:[%.2f],电池2:[%.2f],电池3:[%.2f],电池4:[%.2f],电池5:[%.2f],电池6:[%.2f],电池7:[%.2f],电池8:[%.2f],电池9:[%.2f],电池10:[%.2f],电池11:[%.2f],电池12:[%.2f],电池13:[%.2f],电池14:[%.2f],电池15:[%.2f]\r\n",
 			 osKernelGetTickCount(), cell_v[0], cell_v[1], cell_v[2], cell_v[3], cell_v[4], cell_v[5], cell_v[6], cell_v[7], cell_v[8], cell_v[9], cell_v[10], cell_v[11], cell_v[12], cell_v[13], cell_v[14]);
 		osDelay(TASK_PERIOD_DATA_COLLECT);
