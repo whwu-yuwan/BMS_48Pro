@@ -44,6 +44,14 @@
 #define BQ76940_SYS_CTRL1_ADC_EN    0x10
 #define BQ76940_SYS_CTRL1_TEMP_SEL  0x08
 
+#define BQ76940_REG_SYS_CELL1_BALANCE    0x01
+#define BQ76940_REG_SYS_CELL2_BALANCE    0x02
+#define BQ76940_REG_SYS_CELL3_BALANCE    0x03
+
+#define BQ76940_SYS_CELL1_BALANCE BQ76940_REG_SYS_CELL1_BALANCE
+#define BQ76940_SYS_CELL2_BALANCE BQ76940_REG_SYS_CELL2_BALANCE
+#define BQ76940_SYS_CELL3_BALANCE BQ76940_REG_SYS_CELL3_BALANCE
+
 #define BQ76940_SYS_CTRL2_CHG_ON    0x01
 #define BQ76940_SYS_CTRL2_DSG_ON    0x02
 #define BQ76940_SYS_CTRL2_CC_EN     0x40
@@ -65,5 +73,8 @@ uint8_t BQ76940_ReadFault(uint8_t *fault);             // 读故障
 uint8_t BQ76940_ClearFault(void);                      // 清除故障
 uint8_t BQ76940_SetDischargeMOS(uint8_t onoff);       // 放电MOS
 uint8_t BQ76940_SetChargeMOS(uint8_t onoff);           // 充电MOS
+uint8_t BQ76940_SetBalanceMOS(uint8_t onoff, uint8_t g_balance_target1, uint8_t g_balance_target2, uint8_t g_balance_target3); // 电池均衡MOS
+uint8_t BQ76940_GetPresentCellCount(void);
+uint8_t BQ76940_CalcSOC(float voltage);
 
 #endif

@@ -11,6 +11,7 @@
 /* ADC 增益/偏移：由器件寄存器 ADCGAIN/ADCOFFSET 计算得到 */
 static uint16_t g_bq_gain_uV = 365;
 static int16_t g_bq_offset_mV = 0;
+static uint8_t g_bq_balance_channel = 0;
 
 /* 上电/复位后唤醒：对 WAKE 引脚输出一次脉冲或上升沿（具体电平保持可配置） */
 static void bq_wake_pulse(void)
@@ -33,10 +34,9 @@ static void bq_wake_pulse(void)
 /* 读 1 字节寄存器：按编译期开关决定是否使用 PEC 读 */
 static uint8_t bq_read_u8(uint8_t reg, uint8_t *val)
 {
-	if (BQ76940_READ_USE_PEC)
-	{
-		return BSP_I2C_Read_Byte_PEC(BQ76940_ADDR, reg, val);
-	}
+#if BQ76940_READ_USE_PEC
+	return BSP_I2C_Read_Byte_PEC(BQ76940_ADDR, reg, val);
+#endif
 	return BSP_I2C_Read_Byte(BQ76940_ADDR, reg, val);
 }
 
@@ -65,10 +65,9 @@ static uint8_t bq_read_u16(uint8_t reg_hi, uint16_t *val)
 /* 写 1 字节寄存器：按 BQ76940_USE_PEC 决定是否附带 PEC */
 static uint8_t bq_write_u8(uint8_t reg, uint8_t val)
 {
-	if (BQ76940_USE_PEC)
-	{
-		return BSP_I2C_Write_Byte_PEC(BQ76940_ADDR, reg, val);
-	}
+#if BQ76940_USE_PEC
+	return BSP_I2C_Write_Byte_PEC(BQ76940_ADDR, reg, val);
+#endif
 	return BSP_I2C_Write_Byte(BQ76940_ADDR, reg, val);
 }
 
@@ -325,3 +324,188 @@ uint8_t BQ76940_SetChargeMOS(uint8_t onoff)
 
 	return bq_write_u8(BQ76940_REG_SYS_CTRL2, sys_ctrl2);
 }
+
+/**
+ * @brief 控制电池均衡 MOS（BAL）
+ * 
+ * @param onoff 0: 关闭均衡，1: 开启均衡
+ * @param balance_target1 需要进行均衡的电芯通道1
+ * @param balance_target2 需要进行均衡的电芯通道2
+ * @param balance_target3 需要进行均衡的电芯通道3
+ * @return uint8_t 0: 成功，1: 失败
+ */
+
+uint8_t BQ76940_SetBalanceMOS(uint8_t onoff, uint8_t g_balance_target1, uint8_t g_balance_target2, uint8_t g_balance_target3)
+{
+	uint8_t odd_channel_mask = 0x55;
+	uint8_t even_channel_mask = 0xAA;
+
+	uint8_t sys_cell_balance1 = 0;
+	uint8_t sys_cell_balance2 = 0;
+	uint8_t sys_cell_balance3 = 0;
+	if (onoff != 0)
+	{
+		sys_cell_balance1 |= g_balance_target1;
+		sys_cell_balance2 |= g_balance_target2;
+		sys_cell_balance3 |= g_balance_target3;
+
+		sys_cell_balance1 &= 0x1F;
+		sys_cell_balance2 &= 0x1F;
+		sys_cell_balance3 &= 0x1F;
+
+		uint8_t mask1 = 0;
+		uint8_t mask2 = 0;
+		uint8_t mask3 = 0;
+		if (g_bq_balance_channel == 1)
+		{
+			mask1 = odd_channel_mask;
+			mask2 = even_channel_mask;
+			mask3 = odd_channel_mask;
+			g_bq_balance_channel = 0;
+		}
+		else
+		{
+			mask1 = even_channel_mask;
+			mask2 = odd_channel_mask;
+			mask3 = even_channel_mask;
+			g_bq_balance_channel = 1;
+		}
+
+		sys_cell_balance1 &= mask1;
+		sys_cell_balance2 &= mask2;
+		sys_cell_balance3 &= mask3;
+	}
+
+	//写均衡寄存器
+	if (bq_write_u8(BQ76940_REG_SYS_CELL1_BALANCE, sys_cell_balance1) != 0)
+	{
+		return 1;
+	}
+	if (bq_write_u8(BQ76940_REG_SYS_CELL2_BALANCE, sys_cell_balance2) != 0)
+	{
+		return 1;
+	}
+	if (bq_write_u8(BQ76940_REG_SYS_CELL3_BALANCE, sys_cell_balance3) != 0)
+	{
+		return 1;
+	}
+	return 0;
+}
+
+uint8_t BQ76940_GetPresentCellCount(void)
+{
+	uint8_t series_count = 0;
+	for (uint8_t i = 0; i < BQ76940_CELL_NUM; i++)
+	{
+		if (((BQ76940_CELL_PRESENT_MASK >> i) & 0x01u) != 0u)
+		{
+			series_count++;
+		}
+	}
+	return series_count;
+}
+
+uint8_t BQ76940_CalcSOC(float voltage)
+{
+	if (voltage <= 0.0f)
+	{
+		return 0;
+	}
+
+	float pack_mV = voltage;
+	if (pack_mV < 1000.0f)
+	{
+		pack_mV *= 1000.0f;
+	}
+
+	uint8_t series_count = BQ76940_GetPresentCellCount();
+	if (series_count == 0u)
+	{
+		return 0;
+	}
+
+	float cell_mV = pack_mV;
+	if ((series_count > 1u) && (pack_mV > 6000.0f))
+	{
+		cell_mV = pack_mV / (float)series_count;
+	}
+	if (cell_mV >= 4150.0f)
+	{
+		return 100u;
+	}
+	else if (cell_mV >= 4100.0f)
+	{
+		return 95u;
+	}
+	else if (cell_mV >= 4050.0f)
+	{
+		return 90u;
+	}
+	else if (cell_mV >= 4000.0f)
+	{
+		return 88u;
+	}
+	else if (cell_mV >= 3950.0f)
+	{
+		return 87u;
+	}
+	else if (cell_mV >= 3900.0f)
+	{
+		return 86u;
+	}
+	else if (cell_mV >= 3850.0f)
+	{
+		return 84u;
+	}
+	else if (cell_mV >= 3800.0f)
+	{
+		return 83u;
+	}
+	else if (cell_mV >= 3750.0f)
+	{
+		return 82u;
+	}
+	else if (cell_mV >= 3700.0f)
+	{
+		return 81u;
+	}
+	else if (cell_mV >= 3650.0f)
+	{
+		return 80u;
+	}
+	else if (cell_mV >= 3600.0f)
+	{
+		return 79u;
+	}
+	else if (cell_mV >= 3550.0f)
+	{
+		return 78u;
+	}
+	else if (cell_mV >= 3500.0f)
+	{
+		return 77u;
+	}
+	else if (cell_mV >= 3450.0f)
+	{
+		return 40u;
+	}
+	else if (cell_mV >= 3400.0f)
+	{
+		return 30u;
+	}
+	else if (cell_mV >= 3300.0f)
+	{
+		return 20u;
+	}
+	else if (cell_mV >= 3200.0f)
+	{
+		return 10u;
+	}
+	else if (cell_mV >= 3100.0f)
+	{
+		return 5u;
+	}
+	return 0u;
+}
+
+

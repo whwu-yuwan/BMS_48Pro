@@ -70,8 +70,11 @@ static uint8_t g_bq_inited = 0;
 static uint8_t bq_calc_pec_read_u8(uint8_t dev_addr, uint8_t reg, uint8_t data)
 {
   uint8_t crc = 0x00u;
-  uint8_t addr = ((dev_addr << 1) | 1u);
-  crc = CRC8_Update(crc, &addr, 1u, 0x07u);
+  uint8_t addr_w = (uint8_t)(dev_addr << 1);
+  uint8_t addr_r = (uint8_t)((dev_addr << 1) | 1u);
+  crc = CRC8_Update(crc, &addr_w, 1u, 0x07u);
+  crc = CRC8_Update(crc, &reg, 1u, 0x07u);
+  crc = CRC8_Update(crc, &addr_r, 1u, 0x07u);
   crc = CRC8_Update(crc, &data, 1u, 0x07u);
   return crc;
 }
@@ -87,6 +90,13 @@ static void bq_dump_reg_u8_with_pec(uint8_t reg)
   }
   uint8_t exp = bq_calc_pec_read_u8(BQ76940_ADDR, reg, rx[0]);
   printf("R[0x%02X]: D=%02X PEC=%02X EXP=%02X OK=%u\r\n", reg, rx[0], rx[1], exp, (rx[1] == exp) ? 1u : 0u);
+}
+
+static void bq_dump_balance_regs_with_pec(void)
+{
+  bq_dump_reg_u8_with_pec(BQ76940_REG_SYS_CELL1_BALANCE);
+  bq_dump_reg_u8_with_pec(BQ76940_REG_SYS_CELL2_BALANCE);
+  bq_dump_reg_u8_with_pec(BQ76940_REG_SYS_CELL3_BALANCE);
 }
 
 static void BQ76940_Test_Init(void)
@@ -107,6 +117,7 @@ static void BQ76940_Test_Init(void)
   if (g_bq_inited)
   {
     printf("BQ76940 init OK\r\n");
+    printf("BQ76940 cell_count=%u mask=0x%04X\r\n", BQ76940_GetPresentCellCount(), (unsigned int)BQ76940_CELL_PRESENT_MASK);
   }
   else
   {
@@ -145,8 +156,24 @@ static void BQ76940_Test_Poll(void)
   uint8_t ok_t = (BQ76940_ReadTemp(&ts1_v) == 0);
   uint8_t ok_f = (BQ76940_ReadFault(&fault) == 0);
 
+  uint8_t cell_count = BQ76940_GetPresentCellCount();
+  float pack_v = 0.0f;
+  if (ok_v && (cell_count > 0u))
+  {
+    for (uint8_t i = 0; i < BQ76940_CELL_NUM; i++)
+    {
+      if (((BQ76940_CELL_PRESENT_MASK >> i) & 0x01u) != 0u)
+      {
+        pack_v += cell_v[i];
+      }
+    }
+  }
+  uint8_t soc = (ok_v ? BQ76940_CalcSOC(pack_v) : 0u);
+
   printf("BQ:V=%u I=%u T=%u F=%u | I=%.3fA TS1=%.3fV STAT=0x%02X \r\n",
          ok_v, ok_i, ok_t, ok_f, pack_i, ts1_v, fault);
+  printf("BQ:SOC=%u%% pack=%.3fV cells=%u avg=%.3fV\r\n",
+         soc, pack_v, cell_count, (cell_count > 0u) ? (pack_v / (float)cell_count) : 0.0f);
 
   printf("c1=%.3fV,c2=%.3fV,c3=%.3fV,c4=%.3fV,c5=%.3fV,c6=%.3fV,c7=%.3fV,c8=%.3fV,c9=%.3fV,c10=%.3fV,c11=%.3fV,c12=%.3fV,c13=%.3fV,c14=%.3fV,c15=%.3fV\r\n",
          cell_v[0], cell_v[1], cell_v[2], cell_v[3], cell_v[4], cell_v[5], cell_v[6], cell_v[7], cell_v[8], cell_v[9], cell_v[10], cell_v[11], cell_v[12], cell_v[13], cell_v[14]);
@@ -218,9 +245,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   printf("Start...\r\n");
   BQ76940_Test_Init();
-  
-  
-  
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -239,13 +264,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    //BQ76940_Test_Poll();
-	
-	  bq_dump_reg_u8_with_pec(BQ76940_REG_VC1_HI);
-    bq_dump_reg_u8_with_pec((uint8_t)(BQ76940_REG_VC1_HI + 1u));
-	
-	HAL_IWDG_Refresh(&hiwdg);
-	HAL_Delay(50);
+    BQ76940_Test_Poll();
   }
   /* USER CODE END 3 */
 }
