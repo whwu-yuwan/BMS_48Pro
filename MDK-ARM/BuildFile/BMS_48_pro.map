@@ -1299,7 +1299,6 @@ Section Cross References
     bsp_bq76940.o(i.BQ76940_ReadFault) refers to bsp_i2c.o(i.BSP_I2C_Read_Byte) for BSP_I2C_Read_Byte
     bsp_bq76940.o(i.BQ76940_ReadTemp) refers to bsp_bq76940.o(i.bq_read_u16) for bq_read_u16
     bsp_bq76940.o(i.BQ76940_ReadTemp) refers to bsp_bq76940.o(i.bq_adc_raw_to_mV) for bq_adc_raw_to_mV
-    bsp_bq76940.o(i.BQ76940_ReadTemp) refers to fdiv.o(x$fpl$fdiv) for __aeabi_fdiv
     bsp_bq76940.o(i.BQ76940_ReadTemp) refers to bsp_bq76940.o(i.bq_adc_mV_to_oC) for bq_adc_mV_to_oC
     bsp_bq76940.o(i.BQ76940_ReadVoltage) refers to bsp_bq76940.o(i.bq_read_u16) for bq_read_u16
     bsp_bq76940.o(i.BQ76940_ReadVoltage) refers to bsp_bq76940.o(i.bq_adc_raw_to_mV) for bq_adc_raw_to_mV
@@ -2496,7 +2495,7 @@ Removing Unused input sections from the image.
     Removing bsp_bq76940.o(i.BQ76940_ClearFault), (34 bytes).
     Removing bsp_bq76940.o(i.BQ76940_ReadCurrent), (64 bytes).
     Removing bsp_bq76940.o(i.BQ76940_ReadFault), (16 bytes).
-    Removing bsp_bq76940.o(i.BQ76940_ReadTemp), (64 bytes).
+    Removing bsp_bq76940.o(i.BQ76940_ReadTemp), (54 bytes).
     Removing bsp_bq76940.o(i.BQ76940_ReadVoltage), (104 bytes).
     Removing bsp_bq76940.o(i.BQ76940_SetChargeMOS), (56 bytes).
     Removing bsp_bq76940.o(i.BQ76940_SetDischargeMOS), (56 bytes).
@@ -2523,7 +2522,7 @@ Removing Unused input sections from the image.
     Removing crc8.o(i.CRC8_Calc), (20 bytes).
     Removing crc8.o(i.CRC8_SMBusPEC), (14 bytes).
 
-824 unused section(s) (total 67383 bytes) removed from the image.
+824 unused section(s) (total 67373 bytes) removed from the image.
 
 ==============================================================================
 
