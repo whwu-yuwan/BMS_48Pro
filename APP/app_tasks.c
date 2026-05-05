@@ -90,21 +90,35 @@ void ChargeControlTask(void *arg){
 
 void SocCalcTask(void *arg){
 	(void)arg;
-	uint8_t soc = 50;
+	float soc = 0.f;
+	uint8_t voltage;
     for(;;)
     {
 		osMutexAcquire(g_mutex_data, osWaitForever);
+		voltage = bms_data.cell_voltage[BQ76940_CELL_NUM];
+		osMutexRelease(g_mutex_data);
+		soc = BQ76940_CalcSOC(voltage);
+		osMutexAcquire(g_mutex_data, osWaitForever);
 		bms_data.soc = soc;
 		osMutexRelease(g_mutex_data);
-		printf("[SOC任务] 运行中... Tick: %u | 模拟计算SOC: %d \r\n", osKernelGetTickCount(), soc);
+		printf("[SOC任务] 运行中... Tick: %u | 计算SOC: %d%% \r\n", osKernelGetTickCount(), soc);
         osDelay(TASK_PERIOD_SOC_CALC);
     }
 }
 
 void BalanceTask(void *arg){
 	(void)arg;
+	float voltage[BQ76940_CELL_NUM] = {0};
+	uint8_t i;
     for(;;)
     {
+		osMutexAcquire(g_mutex_data, osWaitForever);
+		for (i = 0; i < BQ76940_CELL_NUM; i++)
+		{
+			voltage[i] = bms_data.cell_voltage[i];
+		}
+		osMutexRelease(g_mutex_data);
+		
 		printf("[均衡任务] 运行中... Tick: %u | 模拟控制电芯均衡\r\n", osKernelGetTickCount());
         osDelay(TASK_PERIOD_BALANCE_START + TASK_PERIOD_BALANCE_TIME + TASK_PERIOD_BALANCE_END);
     }
