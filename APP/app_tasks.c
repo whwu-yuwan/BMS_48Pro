@@ -25,6 +25,54 @@ static osThreadId_t g_task_balance = NULL;
 static osThreadId_t g_task_can_comm = NULL;
 static osThreadId_t g_task_assist = NULL;
 
+static uint8_t decodeIfCtrlMos(const BSP_CAN_Frame_t *rx)
+{
+	if (rx == NULL)
+	{
+		return 1u;
+	}
+	if (rx->ide != (uint8_t)CAN_ID_STD)
+	{
+		return 1u;
+	}
+	if (rx->rtr != (uint8_t)CAN_RTR_DATA)
+	{
+		return 1u;
+	}
+
+	APP_CAN_MosCtrl_t mos = {0};
+	if (APP_CAN_DecodeMosCtrl(rx, &mos) != 0u)
+	{
+		return 1u;
+	}
+
+	uint8_t changed = 0u;
+
+	osMutexAcquire(g_mutex_data, osWaitForever);
+	if (((mos.charge_mos == 0u) || (mos.charge_mos == 1u)) && (bms_data.charge_mos != mos.charge_mos))
+	{
+		bms_data.charge_mos = mos.charge_mos;
+		changed = 1u;
+	}
+	if (((mos.discharge_mos == 0u) || (mos.discharge_mos == 1u)) && (bms_data.discharge_mos != mos.discharge_mos))
+	{
+		bms_data.discharge_mos = mos.discharge_mos;
+		changed = 1u;
+	}
+	uint8_t chg_now = bms_data.charge_mos;
+	uint8_t dsg_now = bms_data.discharge_mos;
+	osMutexRelease(g_mutex_data);
+
+	if (changed != 0u)
+	{
+		printf("[CAN_MOS] ID:0x%lX chg=%u dsg=%u\r\n",
+			   (unsigned long)rx->id, (unsigned int)chg_now, (unsigned int)dsg_now);
+	}
+	return 0u;
+}
+
+
+/*==================================任务区=========================================*/
 void DataCollectTask(void *arg){
 	(void)arg;
 	float cell_v[BQ76940_CELL_NUM + 1] = {0};
@@ -53,7 +101,8 @@ void DataCollectTask(void *arg){
 			osKernelGetTickCount(),cell_v[BQ76940_CELL_NUM], current_a, temp);
 		printf("[采样任务] 运行中... Tick: %u | 读取电池1:[%.2f],电池2:[%.2f],电池3:[%.2f],电池4:[%.2f],电池5:[%.2f],电池6:[%.2f],电池7:[%.2f],电池8:[%.2f],电池9:[%.2f],电池10:[%.2f],电池11:[%.2f],电池12:[%.2f],电池13:[%.2f],电池14:[%.2f],电池15:[%.2f]\r\n",
 			 osKernelGetTickCount(), cell_v[0], cell_v[1], cell_v[2], cell_v[3], cell_v[4], cell_v[5], cell_v[6], cell_v[7], cell_v[8], cell_v[9], cell_v[10], cell_v[11], cell_v[12], cell_v[13], cell_v[14]);
-
+		
+		// 处理CAN接收数据: 处理MOS控制帧
 		if (g_queue_can_tx != NULL)
 		{
 			float pack_v = 0.0f;
@@ -161,15 +210,25 @@ void ChargeControlTask(void *arg){
 	(void)arg;
     for(;;)
     {
+		static uint8_t last_charge_mos = 0xFFu;
+		static uint8_t last_discharge_mos = 0xFFu;
+
 		osMutexAcquire(g_mutex_data, osWaitForever);
 		uint8_t charge_mos = bms_data.charge_mos;
 		uint8_t discharge_mos = bms_data.discharge_mos;
 		osMutexRelease(g_mutex_data);
 		printf("[充放电任务] 运行中... Tick: %u | 判断充放电状态: 充电mos: %d, 放电mos: %d\r\n", osKernelGetTickCount(), charge_mos, discharge_mos);
-		osMutexAcquire(g_mutex_i2c, osWaitForever);
-		(void)BQ76940_SetChargeMOS((charge_mos != 0u) ? 1u : 0u);
-		(void)BQ76940_SetDischargeMOS((discharge_mos != 0u) ? 1u : 0u);
-		osMutexRelease(g_mutex_i2c);
+		uint8_t charge_req = (charge_mos != 0u) ? 1u : 0u;
+		uint8_t discharge_req = (discharge_mos != 0u) ? 1u : 0u;
+		if ((charge_req != last_charge_mos) || (discharge_req != last_discharge_mos))
+		{
+			osMutexAcquire(g_mutex_i2c, osWaitForever);
+			(void)BQ76940_SetChargeMOS(charge_req);
+			(void)BQ76940_SetDischargeMOS(discharge_req);
+			osMutexRelease(g_mutex_i2c);
+			last_charge_mos = charge_req;
+			last_discharge_mos = discharge_req;
+		}
 
         osDelay(TASK_PERIOD_CHARGE_CONTROL);
     }
@@ -239,41 +298,23 @@ void BalanceTask(void *arg){
     }
 }
 
+
+
 void CanCommTask(void *arg){
     (void)arg;
     for(;;)
     {
+		// 处理CAN接收数据: 处理MOS控制帧
 		BSP_CAN_Frame_t rx = {0};
 		while (BSP_CAN_TryReceive(&rx) == 0u)
 		{
-			if (rx.ide != (uint8_t)CAN_ID_STD)
+			if (decodeIfCtrlMos(&rx) == 0u)
 			{
 				continue;
 			}
-			printf("[CAN_RX] Tick:%u IDE:%u ID:0x%lX DLC:%u D:%02X %02X %02X %02X %02X %02X %02X %02X\r\n",
-				   osKernelGetTickCount(),
-				   (unsigned int)rx.ide,
-				   (unsigned long)rx.id,
-				   (unsigned int)rx.dlc,
-				   rx.data[0], rx.data[1], rx.data[2], rx.data[3], rx.data[4], rx.data[5], rx.data[6], rx.data[7]);
-
-			APP_CAN_MosCtrl_t mos = {0};
-			if (APP_CAN_DecodeMosCtrl(&rx, &mos) == 0u)
-			{
-				osMutexAcquire(g_mutex_data, osWaitForever);
-				if ((mos.charge_mos == 0u) || (mos.charge_mos == 1u))
-				{
-					bms_data.charge_mos = mos.charge_mos;
-				}
-				if ((mos.discharge_mos == 0u) || (mos.discharge_mos == 1u))
-				{
-					bms_data.discharge_mos = mos.discharge_mos;
-				}
-				osMutexRelease(g_mutex_data);
-				printf("[CAN_MOS] set_chg=%u set_dsg=%u\r\n", (unsigned int)mos.charge_mos, (unsigned int)mos.discharge_mos);
-			}
 		}
 
+		// 处理CAN接收数据: 处理告警帧
 		if (g_queue_alarm != NULL)
 		{
 			APP_AlarmMsg_t alarm = {0};
@@ -289,7 +330,7 @@ void CanCommTask(void *arg){
 			}
 		}
 
-
+		// 处理CAN发送数据: 处理MOS控制帧
 		if (g_queue_can_tx != NULL)
 		{
 			BSP_CAN_Frame_t tx = {0};
