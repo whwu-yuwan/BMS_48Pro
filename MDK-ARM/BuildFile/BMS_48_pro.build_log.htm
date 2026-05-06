@@ -22,12 +22,66 @@ Dialog DLL:      TCM.DLL V1.48.0.0
  
 <h2>Project:</h2>
 D:\01_Embedded\01_Project\BMS_48Pro_260425\Template_STM32F103C8T6_Hal_20260425\MDK-ARM\Template_STM32F103C8T6_Hal_20260425.uvprojx
-Project File Date:  04/27/2026
+Project File Date:  05/06/2026
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\Bin'
 Build target 'Template_STM32F103C8T6_Hal_20260425'
-".\BuildFile\BMS_48_pro.axf" - 0 Error(s), 0 Warning(s).
+compiling app_can.c...
+compiling bsp_bq76940.c...
+..\BSP\BSP_Chip\bsp_bq76940.c(71): warning:  #111-D: statement is unreachable
+  	return BSP_I2C_Write_Byte(BQ76940_ADDR, reg, val);
+..\BSP\BSP_Chip\bsp_bq76940.c: 1 warning, 0 errors
+compiling freertos.c...
+compiling main.c...
+../Core/Src/main.c(96): warning:  #177-D: function "bq_dump_balance_regs_with_pec"  was declared but never referenced
+  static void bq_dump_balance_regs_with_pec(void)
+../Core/Src/main.c: 1 warning, 0 errors
+compiling app_tasks.c...
+..\APP\app_tasks.c(48): warning:  #870-D: invalid multibyte character sequence
+  		printf("[采样任务] 运行�?... Tick: %u | 模拟读取15串总电�?:[%.2f]电流:[%.2f]温度:[%.2f]\r\n",
+..\APP\app_tasks.c(48): warning:  #870-D: invalid multibyte character sequence
+  		printf("[采样任务] 运行�?... Tick: %u | 模拟读取15串总电�?:[%.2f]电流:[%.2f]温度:[%.2f]\r\n",
+..\APP\app_tasks.c(50): warning:  #870-D: invalid multibyte character sequence
+  		printf("[采样任务] 运行�?... Tick: %u | 读取电池1:[%.2f],电池2:[%.2f],电池3:[%.2f],电池4:[%.2f],电池5:[%.2f],电池6:[%.2f],电池7:[%.2f],电池8:[%.2f],电池9:[%.2f],电池10:[%.2f],电池11:[%.2f],电池12:[%.2f],电池13:[%.2f],电池14:[%.2f],电池15:[%.2f]\r\n",
+..\APP\app_tasks.c(68): warning:  #870-D: invalid multibyte character sequence
+  				printf("[故障任务] 运行�?... Tick: %u | 模拟检测故障状�?: 过压[%.2f]\r\n", osKernelGetTickCount(), voltage);
+..\APP\app_tasks.c(68): warning:  #870-D: invalid multibyte character sequence
+  				printf("[故障任务] 运行�?... Tick: %u | 模拟检测故障状�?: 过压[%.2f]\r\n", osKernelGetTickCount(), voltage);
+..\APP\app_tasks.c(74): warning:  #870-D: invalid multibyte character sequence
+  				printf("[故障任务] 运行�?... Tick: %u | 模拟检测故障状�?: 过流[%.2f]\r\n", osKernelGetTickCount(), current);
+..\APP\app_tasks.c(74): warning:  #870-D: invalid multibyte character sequence
+  				printf("[故障任务] 运行�?... Tick: %u | 模拟检测故障状�?: 过流[%.2f]\r\n", osKernelGetTickCount(), current);
+..\APP\app_tasks.c(87): warning:  #870-D: invalid multibyte character sequence
+  		 printf("[充放电任务] 运行�?... Tick: %u | 模拟判断充放电状态\r\n", osKernelGetTickCount());
+..\APP\app_tasks.c(105): warning:  #870-D: invalid multibyte character sequence
+  		printf("[SOC任务] 运行�?... Tick: %u | 计算SOC: %d%% \r\n", osKernelGetTickCount(), soc);
+..\APP\app_tasks.c(105): warning:  #181-D: argument is incompatible with corresponding format string conversion
+  		printf("[SOC任务] 运行�?... Tick: %u | 计算SOC: %d%% \r\n", osKernelGetTickCount(), soc);
+..\APP\app_tasks.c(151): warning:  #870-D: invalid multibyte character sequence
+  		printf("[均衡任务] 运行�?... Tick: %u | 模拟控制电芯均衡: %d\r\n", osKernelGetTickCount(), onoff);
+..\APP\app_tasks.c(112): warning:  #177-D: variable "voltage"  was declared but never referenced
+  	float voltage[BQ76940_CELL_NUM] = {0};
+..\APP\app_tasks.c(113): warning:  #177-D: variable "i"  was declared but never referenced
+  	uint8_t i;
+..\APP\app_tasks.c(114): warning:  #177-D: variable "voltage_min"  was declared but never referenced
+  	float voltage_min = 5.f;
+..\APP\app_tasks.c(116): warning:  #177-D: variable "mask1"  was declared but never referenced
+  	uint8_t mask1 = 0;
+..\APP\app_tasks.c(117): warning:  #177-D: variable "mask2"  was declared but never referenced
+  	uint8_t mask2 = 0;
+..\APP\app_tasks.c(118): warning:  #177-D: variable "mask3"  was declared but never referenced
+  	uint8_t mask3 = 0;
+..\APP\app_tasks.c(23): warning:  #550-D: variable "g_task_assist"  was set but never used
+  static osThreadId_t g_task_assist = NULL;
+..\APP\app_tasks.c: 18 warnings, 0 errors
+linking...
+Program Size: Code=29116 RO-data=2252 RW-data=224 ZI-data=8344  
+FromELF: creating hex file...
+After Build - User command #1: fromelf --bin --output D:\01_Embedded\01_Project\BMS_48Pro_260425\Template_STM32F103C8T6_Hal_20260425\MDK-ARM\BuildFile
+Error: Q0120E: No input file specified.
+Finished: 0 information, 0 warning and 1 error messages.
+".\BuildFile\BMS_48_pro.axf" - 0 Error(s), 20 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -51,7 +105,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.4.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:00
+Build Time Elapsed:  00:00:05
 </pre>
 </body>
 </html>

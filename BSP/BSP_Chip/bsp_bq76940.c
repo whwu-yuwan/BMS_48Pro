@@ -243,7 +243,7 @@ uint8_t BQ76940_ReadCurrent(float *current)
 	return 0;
 }
 
-/* 读取温度通道（此处读取 TS1），返回值单位：V（由 ADC 转换而来，后续可再换算为温度） */
+/* 读取温度通道（此处读取 TS1） */
 uint8_t BQ76940_ReadTemp(float *temp)
 {
 	if (temp == NULL)

@@ -29,6 +29,7 @@
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 #include "bsp_bq76940.h"
+#include "bsp_can.h"
 #include "crc8.h"
 /* USER CODE END Includes */
 
@@ -246,14 +247,23 @@ int main(void)
   printf("Start...\r\n");
   BQ76940_Test_Init();
 
+  for (uint8_t i = 0; i < 10u; i++)
+  {
+    uint8_t data[3] = { i, 0xAAu, 0x55u };
+    uint8_t ret = BSP_CAN_SendStd(0x123u, data, 3u, 10u);
+    printf("CAN_TX std=0x123 dlc=3 ret=%u cnt=%u\r\n", ret, i);
+    HAL_IWDG_Refresh(&hiwdg);
+    HAL_Delay(100);
+  }
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
-  //osKernelInitialize();  /* Call init function for freertos objects (in cmsis_os2.c) */
-  //MX_FREERTOS_Init();
+  osKernelInitialize();  /* Call init function for freertos objects (in cmsis_os2.c) */
+  MX_FREERTOS_Init();
 
   /* Start scheduler */
-  //osKernelStart();
+  osKernelStart();
 
   /* We should never get here as control is now taken by the scheduler */
 

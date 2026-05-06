@@ -47,3 +47,5 @@
 .\buildfile\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
 .\buildfile\app_tasks.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
 .\buildfile\app_tasks.o: ../Config/bms_config.h
+.\buildfile\app_tasks.o: ../BSP/BSP_Peripheral/bsp_can.h
+.\buildfile\app_tasks.o: ../Core/Inc/can.h

@@ -74,7 +74,7 @@ uint8_t BQ76940_ClearFault(void);                      // 清除故障
 uint8_t BQ76940_SetDischargeMOS(uint8_t onoff);       // 放电MOS
 uint8_t BQ76940_SetChargeMOS(uint8_t onoff);           // 充电MOS
 uint8_t BQ76940_SetBalanceMOS(uint8_t onoff, uint8_t g_balance_target1, uint8_t g_balance_target2, uint8_t g_balance_target3); // 电池均衡MOS
-uint8_t BQ76940_GetPresentCellCount(void);
-uint8_t BQ76940_CalcSOC(float voltage);
+uint8_t BQ76940_GetPresentCellCount(void);             // 获取当前电池数量
+uint8_t BQ76940_CalcSOC(float voltage);                 // 开路电压法OCV计算SOC
 
 #endif

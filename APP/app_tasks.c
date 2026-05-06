@@ -7,6 +7,7 @@
 #include "cmsis_os2.h"
 #include "iwdg.h"
 #include "bsp_bq76940.h"
+#include "bsp_can.h"
 
 osSemaphoreId_t g_sem_fault_trigger = NULL;
 osMutexId_t g_mutex_data = NULL;
@@ -110,16 +111,44 @@ void BalanceTask(void *arg){
 	(void)arg;
 	float voltage[BQ76940_CELL_NUM] = {0};
 	uint8_t i;
+	float voltage_min = 5.f;
+	uint8_t onoff = 0;
+	uint8_t mask1 = 0;
+	uint8_t mask2 = 0;
+	uint8_t mask3 = 0;
     for(;;)
     {
+		/*
 		osMutexAcquire(g_mutex_data, osWaitForever);
 		for (i = 0; i < BQ76940_CELL_NUM; i++)
 		{
 			voltage[i] = bms_data.cell_voltage[i];
 		}
 		osMutexRelease(g_mutex_data);
-		
-		printf("[均衡任务] 运行中... Tick: %u | 模拟控制电芯均衡\r\n", osKernelGetTickCount());
+		for (i = 0; i < BQ76940_CELL_NUM; i++)
+		{
+			if (voltage[i] < voltage_min){
+				voltage_min = voltage[i];
+			}
+		}
+		for (i = 0; i < BQ76940_CELL_NUM; i++)
+		{
+			if (voltage[i] - voltage_min > 0.1f){
+				onoff = 1;
+				if (i < 5){
+					mask1 |= (1 << i);
+				}
+				else if (i < 10){
+					mask2 |= (1 << (i - 5));
+				}
+				else{
+					mask3 |= (1 << (i - 10));
+				}
+			}
+		}
+		BQ76940_SetBalanceMOS(onoff,mask1, mask2, mask3);
+		*/
+		printf("[均衡任务] 运行中... Tick: %u | 模拟控制电芯均衡: %d\r\n", osKernelGetTickCount(), onoff);
         osDelay(TASK_PERIOD_BALANCE_START + TASK_PERIOD_BALANCE_TIME + TASK_PERIOD_BALANCE_END);
     }
 }
@@ -128,8 +157,80 @@ void CanCommTask(void *arg){
     (void)arg;
     for(;;)
     {
-		printf("[CAN任务] 运行中... Tick: %u | 模拟CAN收发数据\r\n", osKernelGetTickCount());
-        osDelay(TASK_PERIOD_CAN_COMM);
+		static uint32_t last_tx = 0;
+		static uint8_t tx_cnt = 0;
+
+		BSP_CAN_Frame_t rx = {0};
+		while (BSP_CAN_TryReceive(&rx) == 0u)
+		{
+			printf("[CAN_RX] Tick:%u IDE:%u ID:0x%lX DLC:%u D:%02X %02X %02X %02X %02X %02X %02X %02X\r\n",
+				   osKernelGetTickCount(),
+				   (unsigned int)rx.ide,
+				   (unsigned long)rx.id,
+				   (unsigned int)rx.dlc,
+				   rx.data[0], rx.data[1], rx.data[2], rx.data[3],
+				   rx.data[4], rx.data[5], rx.data[6], rx.data[7]);
+		}
+
+		uint32_t now = osKernelGetTickCount();
+		if ((now - last_tx) >= 1000u)
+		{
+			last_tx = now;
+
+			float pack_v = 0.0f;
+			float current_a = 0.0f;
+			uint8_t soc = 0u;
+
+			osMutexAcquire(g_mutex_data, osWaitForever);
+			for (uint8_t i = 0; i < BQ76940_CELL_NUM; i++)
+			{
+				if (((BQ76940_CELL_PRESENT_MASK >> i) & 0x01u) != 0u)
+				{
+					pack_v += bms_data.cell_voltage[i];
+				}
+			}
+			current_a = bms_data.current;
+			soc = bms_data.soc;
+			osMutexRelease(g_mutex_data);
+
+			uint8_t test[1] = { tx_cnt++ };
+			(void)BSP_CAN_SendStd(0x123u, test, 1u, 10u);
+
+			float pack_mV_f = pack_v * 1000.0f;
+			if (pack_mV_f < 0.0f)
+			{
+				pack_mV_f = 0.0f;
+			}
+			if (pack_mV_f > 65535.0f)
+			{
+				pack_mV_f = 65535.0f;
+			}
+			uint16_t pack_mV = (uint16_t)(pack_mV_f + 0.5f);
+
+			float current_mA_f = current_a * 1000.0f;
+			if (current_mA_f > 32767.0f)
+			{
+				current_mA_f = 32767.0f;
+			}
+			if (current_mA_f < -32768.0f)
+			{
+				current_mA_f = -32768.0f;
+			}
+			int16_t current_mA = (int16_t)(current_mA_f);
+
+			uint8_t cell_count = BQ76940_GetPresentCellCount();
+
+			uint8_t basic[6] = {0};
+			basic[0] = (uint8_t)(pack_mV & 0xFFu);
+			basic[1] = (uint8_t)((pack_mV >> 8) & 0xFFu);
+			basic[2] = (uint8_t)(current_mA & 0xFFu);
+			basic[3] = (uint8_t)((current_mA >> 8) & 0xFFu);
+			basic[4] = soc;
+			basic[5] = cell_count;
+			(void)BSP_CAN_SendStd(0x321u, basic, 6u, 10u);
+		}
+
+        osDelay(10);
     }
 }
 
