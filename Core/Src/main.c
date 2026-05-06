@@ -274,7 +274,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    BQ76940_Test_Poll();
+    //BQ76940_Test_Poll();
   }
   /* USER CODE END 3 */
 }

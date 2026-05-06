@@ -12,6 +12,8 @@
 osSemaphoreId_t g_sem_fault_trigger = NULL;
 osMutexId_t g_mutex_data = NULL;
 osMutexId_t g_mutex_i2c = NULL;
+osMessageQueueId_t g_queue_can_tx = NULL;
+osMessageQueueId_t g_queue_alarm = NULL;
 BMS_Data_t bms_data;
 
 static osThreadId_t g_task_data_collect = NULL;
@@ -40,15 +42,67 @@ void DataCollectTask(void *arg){
 		bms_data.current = current;
 		bms_data.temp += 0.1f;
 		float temp = bms_data.temp;
-		float current = bms_data.current;
+		float current_a = bms_data.current;
+		uint8_t soc = bms_data.soc;
 		osMutexRelease(g_mutex_data);
-		if ((temp >= 3) || (current >= 2)){
+		if ((temp >= 3) || (current_a >= 2)){
 			APP_Trigger_Fault_Task();
 		}
 		printf("[采样任务] 运行中... Tick: %u | 模拟读取15串总电压:[%.2f]电流:[%.2f]温度:[%.2f]\r\n",
-			osKernelGetTickCount(),cell_v[BQ76940_CELL_NUM], current, temp);
+			osKernelGetTickCount(),cell_v[BQ76940_CELL_NUM], current_a, temp);
 		printf("[采样任务] 运行中... Tick: %u | 读取电池1:[%.2f],电池2:[%.2f],电池3:[%.2f],电池4:[%.2f],电池5:[%.2f],电池6:[%.2f],电池7:[%.2f],电池8:[%.2f],电池9:[%.2f],电池10:[%.2f],电池11:[%.2f],电池12:[%.2f],电池13:[%.2f],电池14:[%.2f],电池15:[%.2f]\r\n",
 			 osKernelGetTickCount(), cell_v[0], cell_v[1], cell_v[2], cell_v[3], cell_v[4], cell_v[5], cell_v[6], cell_v[7], cell_v[8], cell_v[9], cell_v[10], cell_v[11], cell_v[12], cell_v[13], cell_v[14]);
+
+		if (g_queue_can_tx != NULL)
+		{
+			float pack_v = 0.0f;
+			for (uint8_t i = 0; i < BQ76940_CELL_NUM; i++)
+			{
+				if (((BQ76940_CELL_PRESENT_MASK >> i) & 0x01u) != 0u)
+				{
+					pack_v += cell_v[i];
+				}
+			}
+
+			float pack_mV_f = pack_v * 1000.0f;
+			if (pack_mV_f < 0.0f)
+			{
+				pack_mV_f = 0.0f;
+			}
+			if (pack_mV_f > 65535.0f)
+			{
+				pack_mV_f = 65535.0f;
+			}
+			uint16_t pack_mV = (uint16_t)(pack_mV_f + 0.5f);
+
+			float current_mA_f = current_a * 1000.0f;
+			if (current_mA_f > 32767.0f)
+			{
+				current_mA_f = 32767.0f;
+			}
+			if (current_mA_f < -32768.0f)
+			{
+				current_mA_f = -32768.0f;
+			}
+			int16_t current_mA = (int16_t)(current_mA_f);
+
+			uint8_t cell_count = BQ76940_GetPresentCellCount();
+
+			BSP_CAN_Frame_t tx = {0};
+			tx.ide = (uint8_t)CAN_ID_STD;
+			tx.rtr = (uint8_t)CAN_RTR_DATA;
+			tx.id = 0x321u;
+			tx.dlc = 6u;
+			tx.data[0] = (uint8_t)(pack_mV & 0xFFu);
+			tx.data[1] = (uint8_t)((pack_mV >> 8) & 0xFFu);
+			tx.data[2] = (uint8_t)(current_mA & 0xFFu);
+			tx.data[3] = (uint8_t)((current_mA >> 8) & 0xFFu);
+			tx.data[4] = soc;
+			tx.data[5] = cell_count;
+
+			(void)osMessageQueuePut(g_queue_can_tx, &tx, 0u, 0u);
+		}
+
 		osDelay(TASK_PERIOD_DATA_COLLECT);
 	}
 }
@@ -66,12 +120,34 @@ void FaultProtectTask(void *arg){
 			osMutexRelease(g_mutex_data);
 			if (voltage >= 3){
 				printf("[故障任务] 运行中... Tick: %u | 模拟检测故障状态: 过压[%.2f]\r\n", osKernelGetTickCount(), voltage);
+				if (g_queue_alarm != NULL)
+				{
+					APP_AlarmMsg_t alarm = {0};
+					alarm.code = (uint8_t)APP_ALARM_OV;
+					float mv = voltage * 1000.0f;
+					if (mv > 32767.0f) mv = 32767.0f;
+					if (mv < -32768.0f) mv = -32768.0f;
+					alarm.value = (int16_t)mv;
+					alarm.tick = osKernelGetTickCount();
+					(void)osMessageQueuePut(g_queue_alarm, &alarm, 0u, 0u);
+				}
 				osMutexAcquire(g_mutex_data, osWaitForever);
 				bms_data.temp = 0.f;	
 				osMutexRelease(g_mutex_data);
 			}
 			if (current >= 2){
 				printf("[故障任务] 运行中... Tick: %u | 模拟检测故障状态: 过流[%.2f]\r\n", osKernelGetTickCount(), current);
+				if (g_queue_alarm != NULL)
+				{
+					APP_AlarmMsg_t alarm = {0};
+					alarm.code = (uint8_t)APP_ALARM_OC;
+					float ma = current * 1000.0f;
+					if (ma > 32767.0f) ma = 32767.0f;
+					if (ma < -32768.0f) ma = -32768.0f;
+					alarm.value = (int16_t)ma;
+					alarm.tick = osKernelGetTickCount();
+					(void)osMessageQueuePut(g_queue_alarm, &alarm, 0u, 0u);
+				}
 				osMutexAcquire(g_mutex_data, osWaitForever);
 				bms_data.current = 0.f;
 				osMutexRelease(g_mutex_data);
@@ -157,9 +233,6 @@ void CanCommTask(void *arg){
     (void)arg;
     for(;;)
     {
-		static uint32_t last_tx = 0;
-		static uint8_t tx_cnt = 0;
-
 		BSP_CAN_Frame_t rx = {0};
 		while (BSP_CAN_TryReceive(&rx) == 0u)
 		{
@@ -172,62 +245,36 @@ void CanCommTask(void *arg){
 				   rx.data[4], rx.data[5], rx.data[6], rx.data[7]);
 		}
 
-		uint32_t now = osKernelGetTickCount();
-		if ((now - last_tx) >= 1000u)
+		if (g_queue_alarm != NULL)
 		{
-			last_tx = now;
-
-			float pack_v = 0.0f;
-			float current_a = 0.0f;
-			uint8_t soc = 0u;
-
-			osMutexAcquire(g_mutex_data, osWaitForever);
-			for (uint8_t i = 0; i < BQ76940_CELL_NUM; i++)
+			APP_AlarmMsg_t alarm = {0};
+			while (osMessageQueueGet(g_queue_alarm, &alarm, NULL, 0u) == osOK)
 			{
-				if (((BQ76940_CELL_PRESENT_MASK >> i) & 0x01u) != 0u)
+				uint8_t data[4] = {0};
+				data[0] = alarm.code;
+				data[1] = (uint8_t)((uint16_t)alarm.value & 0xFFu);
+				data[2] = (uint8_t)(((uint16_t)alarm.value >> 8) & 0xFFu);
+				data[3] = (uint8_t)(alarm.tick & 0xFFu);
+				(void)BSP_CAN_SendStd(0x320u, data, 4u, 10u);
+				printf("[CAN_ALARM] code=%u value=%d tick=%u\r\n", (unsigned int)alarm.code, (int)alarm.value, (unsigned int)alarm.tick);
+			}
+		}
+
+		
+		if (g_queue_can_tx != NULL)
+		{
+			BSP_CAN_Frame_t tx = {0};
+			while (osMessageQueueGet(g_queue_can_tx, &tx, NULL, 0u) == osOK)
+			{
+				if (tx.ide == (uint8_t)CAN_ID_STD)
 				{
-					pack_v += bms_data.cell_voltage[i];
+					(void)BSP_CAN_SendStd((uint16_t)tx.id, tx.data, tx.dlc, 10u);
+				}
+				else
+				{
+					(void)BSP_CAN_SendExt(tx.id, tx.data, tx.dlc, 10u);
 				}
 			}
-			current_a = bms_data.current;
-			soc = bms_data.soc;
-			osMutexRelease(g_mutex_data);
-
-			uint8_t test[1] = { tx_cnt++ };
-			(void)BSP_CAN_SendStd(0x123u, test, 1u, 10u);
-
-			float pack_mV_f = pack_v * 1000.0f;
-			if (pack_mV_f < 0.0f)
-			{
-				pack_mV_f = 0.0f;
-			}
-			if (pack_mV_f > 65535.0f)
-			{
-				pack_mV_f = 65535.0f;
-			}
-			uint16_t pack_mV = (uint16_t)(pack_mV_f + 0.5f);
-
-			float current_mA_f = current_a * 1000.0f;
-			if (current_mA_f > 32767.0f)
-			{
-				current_mA_f = 32767.0f;
-			}
-			if (current_mA_f < -32768.0f)
-			{
-				current_mA_f = -32768.0f;
-			}
-			int16_t current_mA = (int16_t)(current_mA_f);
-
-			uint8_t cell_count = BQ76940_GetPresentCellCount();
-
-			uint8_t basic[6] = {0};
-			basic[0] = (uint8_t)(pack_mV & 0xFFu);
-			basic[1] = (uint8_t)((pack_mV >> 8) & 0xFFu);
-			basic[2] = (uint8_t)(current_mA & 0xFFu);
-			basic[3] = (uint8_t)((current_mA >> 8) & 0xFFu);
-			basic[4] = soc;
-			basic[5] = cell_count;
-			(void)BSP_CAN_SendStd(0x321u, basic, 6u, 10u);
 		}
 
         osDelay(10);
@@ -270,6 +317,8 @@ void APP_Task_Create(void){
 	g_sem_fault_trigger = osSemaphoreNew(5, 0, NULL);
 	g_mutex_data = osMutexNew(NULL);
 	g_mutex_i2c = osMutexNew(NULL);
+	g_queue_can_tx = osMessageQueueNew(16u, sizeof(BSP_CAN_Frame_t), NULL);
+	g_queue_alarm = osMessageQueueNew(8u, sizeof(APP_AlarmMsg_t), NULL);
 	
 	g_task_data_collect = osThreadNew(DataCollectTask, NULL, &(osThreadAttr_t){
 		.name = "DataCollectTask",

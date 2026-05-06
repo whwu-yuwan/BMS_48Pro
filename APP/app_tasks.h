@@ -5,6 +5,7 @@
 #include "cmsis_os2.h"
 #include "iwdg.h"
 #include "bsp_bq76940.h"
+#include "bsp_can.h"
 
 typedef struct {
     float cell_voltage[BQ76940_CELL_NUM + 1]; // 15串 + 总电压
@@ -18,9 +19,25 @@ typedef struct {
 extern osSemaphoreId_t g_sem_fault_trigger;
 extern osMutexId_t g_mutex_data;
 extern osMutexId_t g_mutex_i2c;
+extern osMessageQueueId_t g_queue_can_tx;
+extern osMessageQueueId_t g_queue_alarm;
 
 extern IWDG_HandleTypeDef hiwdg;
 extern BMS_Data_t bms_data;
+
+typedef enum
+{
+    APP_ALARM_OV = 1,
+    APP_ALARM_OC = 2,
+    APP_ALARM_OT = 3,
+} APP_AlarmCode_t;
+
+typedef struct
+{
+    uint8_t code;
+    int16_t value;
+    uint32_t tick;
+} APP_AlarmMsg_t;
 
 //	七大任务
 void DataCollectTask(void *arg);    

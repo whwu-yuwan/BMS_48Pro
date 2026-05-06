@@ -46,3 +46,5 @@
 .\buildfile\freertos.o: ../Core/Inc/iwdg.h
 .\buildfile\freertos.o: ../BSP/BSP_Chip/bsp_bq76940.h
 .\buildfile\freertos.o: ../BSP/BSP_Peripheral/bsp_i2c.h
+.\buildfile\freertos.o: ../BSP/BSP_Peripheral/bsp_can.h
+.\buildfile\freertos.o: ../Core/Inc/can.h
