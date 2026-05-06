@@ -7,6 +7,14 @@
 #include "bsp_bq76940.h"
 #include "bsp_can.h"
 
+#define APP_FAULT_SEM_MAX        5u
+#define APP_CAN_TX_QUEUE_LEN     16u
+#define APP_ALARM_QUEUE_LEN      8u
+
+#define APP_CAN_ID_ALARM_STD     0x320u
+#define APP_CAN_ALARM_DLC        4u
+#define APP_CAN_TX_TIMEOUT_MS    10u
+
 typedef struct {
     float cell_voltage[BQ76940_CELL_NUM + 1]; // 15串 + 总电压
     float current;

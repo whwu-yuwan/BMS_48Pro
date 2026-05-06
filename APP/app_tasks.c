@@ -141,7 +141,7 @@ void DataCollectTask(void *arg){
 			BSP_CAN_Frame_t tx = {0};
 			tx.ide = (uint8_t)CAN_ID_STD;
 			tx.rtr = (uint8_t)CAN_RTR_DATA;
-			tx.id = 0x321u;
+			tx.id = (uint32_t)APP_CAN_ID_BMS_BASIC_STD;
 			tx.dlc = 6u;
 			tx.data[0] = (uint8_t)(pack_mV & 0xFFu);
 			tx.data[1] = (uint8_t)((pack_mV >> 8) & 0xFFu);
@@ -320,12 +320,12 @@ void CanCommTask(void *arg){
 			APP_AlarmMsg_t alarm = {0};
 			while (osMessageQueueGet(g_queue_alarm, &alarm, NULL, 0u) == osOK)
 			{
-				uint8_t data[4] = {0};
+				uint8_t data[APP_CAN_ALARM_DLC] = {0};
 				data[0] = alarm.code;
 				data[1] = (uint8_t)((uint16_t)alarm.value & 0xFFu);
 				data[2] = (uint8_t)(((uint16_t)alarm.value >> 8) & 0xFFu);
 				data[3] = (uint8_t)(alarm.tick & 0xFFu);
-				(void)BSP_CAN_SendStd(0x320u, data, 4u, 10u);
+				(void)BSP_CAN_SendStd(APP_CAN_ID_ALARM_STD, data, APP_CAN_ALARM_DLC, APP_CAN_TX_TIMEOUT_MS);
 				printf("[CAN_ALARM] code=%u value=%d tick=%u\r\n", (unsigned int)alarm.code, (int)alarm.value, (unsigned int)alarm.tick);
 			}
 		}
@@ -338,15 +338,14 @@ void CanCommTask(void *arg){
 			{
 				if (tx.ide == (uint8_t)CAN_ID_STD)
 				{
-					(void)BSP_CAN_SendStd((uint16_t)tx.id, tx.data, tx.dlc, 10u);
+					(void)BSP_CAN_SendStd((uint16_t)tx.id, tx.data, tx.dlc, APP_CAN_TX_TIMEOUT_MS);
 				}
 				else
 				{
-					(void)BSP_CAN_SendExt(tx.id, tx.data, tx.dlc, 10u);
+					(void)BSP_CAN_SendExt(tx.id, tx.data, tx.dlc, APP_CAN_TX_TIMEOUT_MS);
 				}
 			}
 		}
-
         osDelay(10);
     }
 }
@@ -384,11 +383,11 @@ void APP_Trigger_Fault_Task(void)
 }
 
 void APP_Task_Create(void){
-	g_sem_fault_trigger = osSemaphoreNew(5, 0, NULL);
+	g_sem_fault_trigger = osSemaphoreNew(APP_FAULT_SEM_MAX, 0, NULL);
 	g_mutex_data = osMutexNew(NULL);
 	g_mutex_i2c = osMutexNew(NULL);
-	g_queue_can_tx = osMessageQueueNew(16u, sizeof(BSP_CAN_Frame_t), NULL);
-	g_queue_alarm = osMessageQueueNew(8u, sizeof(APP_AlarmMsg_t), NULL);
+	g_queue_can_tx = osMessageQueueNew(APP_CAN_TX_QUEUE_LEN, sizeof(BSP_CAN_Frame_t), NULL);
+	g_queue_alarm = osMessageQueueNew(APP_ALARM_QUEUE_LEN, sizeof(APP_AlarmMsg_t), NULL);
 	
 	g_task_data_collect = osThreadNew(DataCollectTask, NULL, &(osThreadAttr_t){
 		.name = "DataCollectTask",
