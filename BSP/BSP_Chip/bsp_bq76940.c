@@ -283,7 +283,9 @@ uint8_t BQ76940_ClearFault(void)
 	return bq_write_u8(BQ76940_REG_SYS_STAT, sys_stat);
 }
 
-/* 控制放电 MOS（DSG） */
+/* 控制放电 MOS（DSG） @param onoff 0: 关闭放电，1: 开启放电
+ * @return uint8_t 0: 成功，1: 失败
+ */
 uint8_t BQ76940_SetDischargeMOS(uint8_t onoff)
 {
 	uint8_t sys_ctrl2 = 0;
@@ -304,7 +306,9 @@ uint8_t BQ76940_SetDischargeMOS(uint8_t onoff)
 	return bq_write_u8(BQ76940_REG_SYS_CTRL2, sys_ctrl2);
 }
 
-/* 控制充电 MOS（CHG） */
+/* 控制充电 MOS（CHG） @param onoff 0: 关闭充电，1: 开启充电
+ * @return uint8_t 0: 成功，1: 失败
+ */
 uint8_t BQ76940_SetChargeMOS(uint8_t onoff)
 {
 	uint8_t sys_ctrl2 = 0;

@@ -54,3 +54,20 @@ uint8_t APP_CAN_DecodeBmsBasic(const BSP_CAN_Frame_t *frame, APP_CAN_BmsBasic_t 
 	out->cell_count = frame->data[5];
 	return 0u;
 }
+
+uint8_t APP_CAN_DecodeMosCtrl(const BSP_CAN_Frame_t *frame, APP_CAN_MosCtrl_t *out)
+{
+	if ((frame == NULL) || (out == NULL))
+	{
+		return 2u;
+	}
+
+	if ((frame->ide != (uint8_t)CAN_ID_STD) || (frame->id != (uint32_t)APP_CAN_ID_MOS_CTRL_STD) || (frame->dlc < 2u))
+	{
+		return 1u;
+	}
+
+	out->charge_mos = frame->data[0];
+	out->discharge_mos = frame->data[1];
+	return 0u;
+}

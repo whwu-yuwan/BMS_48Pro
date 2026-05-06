@@ -13,6 +13,8 @@ typedef struct {
     float temp;//温度
     uint8_t soc;
     uint8_t is_fault;
+    uint8_t charge_mos; // 充电mos 0: 关闭 1: 开启
+    uint8_t discharge_mos; // 放电mos 0: 关闭 1: 开启
 }BMS_Data_t;
 
 // 	信号量

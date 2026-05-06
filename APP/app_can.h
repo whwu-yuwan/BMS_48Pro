@@ -17,8 +17,11 @@
 /**
  * @brief CAN 报文 ID 定义（标准帧）
  */
-#define APP_CAN_ID_TEST_STD      0x123u
-#define APP_CAN_ID_BMS_BASIC_STD 0x321u
+#define APP_CAN_ID_TEST_STD      0x123u // 测试帧
+#define APP_CAN_ID_BMS_BASIC_STD 0x321u // BMS 基础状态帧
+#define APP_CAN_ID_MOS_CTRL_STD  0x322u // MOS 控制帧
+#define APP_CAN_ID_MOS_ACK_STD   0x323u // MOS 控制确认帧
+
 
 /**
  * @brief BMS 基础状态帧（StdID=0x321，DLC=6）
@@ -35,6 +38,12 @@ typedef struct
 	uint8_t soc;
 	uint8_t cell_count;
 } APP_CAN_BmsBasic_t;
+
+typedef struct
+{
+	uint8_t charge_mos;
+	uint8_t discharge_mos;
+} APP_CAN_MosCtrl_t;
 
 /**
  * @brief APP 层初始化（最简版可为空）
@@ -70,5 +79,7 @@ uint8_t APP_CAN_TryReceive(BSP_CAN_Frame_t *frame);
  * @return 0 解包成功；非 0 不匹配/失败
  */
 uint8_t APP_CAN_DecodeBmsBasic(const BSP_CAN_Frame_t *frame, APP_CAN_BmsBasic_t *out);
+
+uint8_t APP_CAN_DecodeMosCtrl(const BSP_CAN_Frame_t *frame, APP_CAN_MosCtrl_t *out);
 
 #endif

@@ -8,6 +8,7 @@
 #include "iwdg.h"
 #include "bsp_bq76940.h"
 #include "bsp_can.h"
+#include "app_can.h"
 
 osSemaphoreId_t g_sem_fault_trigger = NULL;
 osMutexId_t g_mutex_data = NULL;
@@ -160,7 +161,16 @@ void ChargeControlTask(void *arg){
 	(void)arg;
     for(;;)
     {
-		 printf("[充放电任务] 运行中... Tick: %u | 模拟判断充放电状态\r\n", osKernelGetTickCount());
+		osMutexAcquire(g_mutex_data, osWaitForever);
+		uint8_t charge_mos = bms_data.charge_mos;
+		uint8_t discharge_mos = bms_data.discharge_mos;
+		osMutexRelease(g_mutex_data);
+		printf("[充放电任务] 运行中... Tick: %u | 判断充放电状态: 充电mos: %d, 放电mos: %d\r\n", osKernelGetTickCount(), charge_mos, discharge_mos);
+		osMutexAcquire(g_mutex_i2c, osWaitForever);
+		(void)BQ76940_SetChargeMOS((charge_mos != 0u) ? 1u : 0u);
+		(void)BQ76940_SetDischargeMOS((discharge_mos != 0u) ? 1u : 0u);
+		osMutexRelease(g_mutex_i2c);
+
         osDelay(TASK_PERIOD_CHARGE_CONTROL);
     }
 }
@@ -236,13 +246,32 @@ void CanCommTask(void *arg){
 		BSP_CAN_Frame_t rx = {0};
 		while (BSP_CAN_TryReceive(&rx) == 0u)
 		{
+			if (rx.ide != (uint8_t)CAN_ID_STD)
+			{
+				continue;
+			}
 			printf("[CAN_RX] Tick:%u IDE:%u ID:0x%lX DLC:%u D:%02X %02X %02X %02X %02X %02X %02X %02X\r\n",
 				   osKernelGetTickCount(),
 				   (unsigned int)rx.ide,
 				   (unsigned long)rx.id,
 				   (unsigned int)rx.dlc,
-				   rx.data[0], rx.data[1], rx.data[2], rx.data[3],
-				   rx.data[4], rx.data[5], rx.data[6], rx.data[7]);
+				   rx.data[0], rx.data[1], rx.data[2], rx.data[3], rx.data[4], rx.data[5], rx.data[6], rx.data[7]);
+
+			APP_CAN_MosCtrl_t mos = {0};
+			if (APP_CAN_DecodeMosCtrl(&rx, &mos) == 0u)
+			{
+				osMutexAcquire(g_mutex_data, osWaitForever);
+				if ((mos.charge_mos == 0u) || (mos.charge_mos == 1u))
+				{
+					bms_data.charge_mos = mos.charge_mos;
+				}
+				if ((mos.discharge_mos == 0u) || (mos.discharge_mos == 1u))
+				{
+					bms_data.discharge_mos = mos.discharge_mos;
+				}
+				osMutexRelease(g_mutex_data);
+				printf("[CAN_MOS] set_chg=%u set_dsg=%u\r\n", (unsigned int)mos.charge_mos, (unsigned int)mos.discharge_mos);
+			}
 		}
 
 		if (g_queue_alarm != NULL)
@@ -260,7 +289,7 @@ void CanCommTask(void *arg){
 			}
 		}
 
-		
+
 		if (g_queue_can_tx != NULL)
 		{
 			BSP_CAN_Frame_t tx = {0};
