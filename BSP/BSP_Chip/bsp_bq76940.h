@@ -35,6 +35,7 @@
 
 #define BQ76940_REG_VC1_HI      0x0C
 #define BQ76940_REG_TS1_HI      0x2C
+#define BQ76940_REG_TS1_LOW     0x2D
 #define BQ76940_REG_CC_HI       0x32
 
 #define BQ76940_REG_ADCGAIN1    0x50

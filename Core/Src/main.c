@@ -246,7 +246,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   printf("Start...\r\n");
   BQ76940_Test_Init();
-
+  
   for (uint8_t i = 0; i < 10u; i++)
   {
     uint8_t data[3] = { i, 0xAAu, 0x55u };
@@ -255,7 +255,7 @@ int main(void)
     HAL_IWDG_Refresh(&hiwdg);
     HAL_Delay(100);
   }
-
+  
   /* USER CODE END 2 */
 
   /* Init scheduler */

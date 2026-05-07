@@ -21,6 +21,8 @@
 #define APP_CAN_ID_BMS_BASIC_STD 0x321u // BMS 基础状态帧
 #define APP_CAN_ID_MOS_CTRL_STD  0x322u // MOS 控制帧
 #define APP_CAN_ID_MOS_ACK_STD   0x323u // MOS 控制确认帧
+#define APP_CAN_ID_ALARM_STD     0x320u // 报警状态帧
+
 
 
 /**

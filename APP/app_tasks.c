@@ -76,20 +76,44 @@ static uint8_t decodeIfCtrlMos(const BSP_CAN_Frame_t *rx)
 void DataCollectTask(void *arg){
 	(void)arg;
 	float cell_v[BQ76940_CELL_NUM + 1] = {0};
-	float current;
+	float temp = 0.0f;
+	float current = 0.0f;
 	for ( ; ; ){
 		osMutexAcquire(g_mutex_i2c, osWaitForever);
-		BQ76940_ReadVoltage(cell_v);
-		BQ76940_ReadCurrent(&current);
+		uint8_t ok_v = (BQ76940_ReadVoltage(cell_v) == 0u) ? 1u : 0u;
+		uint8_t ok_i = (BQ76940_ReadCurrent(&current) == 0u) ? 1u : 0u;
+		uint8_t ok_temp = (BQ76940_ReadTemp(&temp) == 0u) ? 1u : 0u;
 		osMutexRelease(g_mutex_i2c);
 
+		float pack_v = 0.0f;
+		if (ok_v != 0u)
+		{
+			for (uint8_t i = 0; i < BQ76940_CELL_NUM; i++)
+			{
+				if (((BQ76940_CELL_PRESENT_MASK >> i) & 0x01u) != 0u)
+				{
+					pack_v += cell_v[i];
+				}
+			}
+		}
+		cell_v[BQ76940_CELL_NUM] = pack_v;
+		if (ok_i == 0u)
+		{
+			current = 0.0f;
+		}
+		if (ok_temp == 0u)
+		{
+			temp = 0.0f;
+		}
+
 		osMutexAcquire(g_mutex_data, osWaitForever);
-		for (uint8_t i = 0; i < (uint8_t)(BQ76940_CELL_NUM + 1); i++)
+		for (uint8_t i = 0; i < (uint8_t)BQ76940_CELL_NUM; i++)
 		{
 			bms_data.cell_voltage[i] = cell_v[i];
 		}
+		bms_data.cell_voltage[BQ76940_CELL_NUM] = pack_v;
 		bms_data.current = current;
-		bms_data.temp += 0.1f;
+		bms_data.temp = temp;
 		float temp = bms_data.temp;
 		float current_a = bms_data.current;
 		uint8_t soc = bms_data.soc;
@@ -98,7 +122,7 @@ void DataCollectTask(void *arg){
 			APP_Trigger_Fault_Task();
 		}
 		printf("[采样任务] 运行中... Tick: %u | 模拟读取15串总电压:[%.2f]电流:[%.2f]温度:[%.2f]\r\n",
-			osKernelGetTickCount(),cell_v[BQ76940_CELL_NUM], current_a, temp);
+			osKernelGetTickCount(), pack_v, current_a, temp);
 		printf("[采样任务] 运行中... Tick: %u | 读取电池1:[%.2f],电池2:[%.2f],电池3:[%.2f],电池4:[%.2f],电池5:[%.2f],电池6:[%.2f],电池7:[%.2f],电池8:[%.2f],电池9:[%.2f],电池10:[%.2f],电池11:[%.2f],电池12:[%.2f],电池13:[%.2f],电池14:[%.2f],电池15:[%.2f]\r\n",
 			 osKernelGetTickCount(), cell_v[0], cell_v[1], cell_v[2], cell_v[3], cell_v[4], cell_v[5], cell_v[6], cell_v[7], cell_v[8], cell_v[9], cell_v[10], cell_v[11], cell_v[12], cell_v[13], cell_v[14]);
 		
@@ -159,22 +183,33 @@ void DataCollectTask(void *arg){
 
 void FaultProtectTask(void *arg){
 	(void)arg;
-	float voltage;
+	float max_cell_v;
 	float current;
     for(;;)
     {
 		if (osSemaphoreAcquire(g_sem_fault_trigger, osWaitForever) == osOK){
 			osMutexAcquire(g_mutex_data, osWaitForever);
-			voltage = bms_data.cell_voltage[BQ76940_CELL_NUM];
+			max_cell_v = 0.0f;
+			for (uint8_t i = 0; i < BQ76940_CELL_NUM; i++)
+			{
+				if (((BQ76940_CELL_PRESENT_MASK >> i) & 0x01u) != 0u)
+				{
+					float v = bms_data.cell_voltage[i];
+					if (v > max_cell_v)
+					{
+						max_cell_v = v;
+					}
+				}
+			}
 			current = bms_data.current;
 			osMutexRelease(g_mutex_data);
-			if (voltage >= 3){
-				printf("[故障任务] 运行中... Tick: %u | 模拟检测故障状态: 过压[%.2f]\r\n", osKernelGetTickCount(), voltage);
+			if (max_cell_v >= 4.20f){
+				printf("[故障任务] 运行中... Tick: %u | 模拟检测故障状态: 过压[%.2f]\r\n", osKernelGetTickCount(), max_cell_v);
 				if (g_queue_alarm != NULL)
 				{
 					APP_AlarmMsg_t alarm = {0};
 					alarm.code = (uint8_t)APP_ALARM_OV;
-					float mv = voltage * 1000.0f;
+					float mv = max_cell_v * 1000.0f;
 					if (mv > 32767.0f) mv = 32767.0f;
 					if (mv < -32768.0f) mv = -32768.0f;
 					alarm.value = (int16_t)mv;
@@ -236,18 +271,18 @@ void ChargeControlTask(void *arg){
 
 void SocCalcTask(void *arg){
 	(void)arg;
-	float soc = 0.f;
-	uint8_t voltage;
+	uint8_t soc = 0u;
+	float pack_v = 0.0f;
     for(;;)
     {
 		osMutexAcquire(g_mutex_data, osWaitForever);
-		voltage = bms_data.cell_voltage[BQ76940_CELL_NUM];
+		pack_v = bms_data.cell_voltage[BQ76940_CELL_NUM];
 		osMutexRelease(g_mutex_data);
-		soc = BQ76940_CalcSOC(voltage);
+		soc = BQ76940_CalcSOC(pack_v);
 		osMutexAcquire(g_mutex_data, osWaitForever);
 		bms_data.soc = soc;
 		osMutexRelease(g_mutex_data);
-		printf("[SOC任务] 运行中... Tick: %u | 计算SOC: %d%% \r\n", osKernelGetTickCount(), soc);
+		printf("[SOC任务] 运行中... Tick: %u | 计算SOC: %u%% \r\n", osKernelGetTickCount(), (unsigned int)soc);
         osDelay(TASK_PERIOD_SOC_CALC);
     }
 }
@@ -388,50 +423,61 @@ void APP_Task_Create(void){
 	g_mutex_i2c = osMutexNew(NULL);
 	g_queue_can_tx = osMessageQueueNew(APP_CAN_TX_QUEUE_LEN, sizeof(BSP_CAN_Frame_t), NULL);
 	g_queue_alarm = osMessageQueueNew(APP_ALARM_QUEUE_LEN, sizeof(APP_AlarmMsg_t), NULL);
+
+	if ((g_sem_fault_trigger == NULL) || (g_mutex_data == NULL) || (g_mutex_i2c == NULL) || (g_queue_can_tx == NULL) || (g_queue_alarm == NULL))
+	{
+		printf("[APP] RTOS obj create FAIL sem=%p m_data=%p m_i2c=%p q_can=%p q_alarm=%p\r\n",
+			   g_sem_fault_trigger, g_mutex_data, g_mutex_i2c, g_queue_can_tx, g_queue_alarm);
+	}
 	
 	g_task_data_collect = osThreadNew(DataCollectTask, NULL, &(osThreadAttr_t){
 		.name = "DataCollectTask",
 		.priority = TASK_PRIO_DATA_COLLECT,
-        .stack_size = TASK_STACK_DATA_COLLECT * 4,
+        .stack_size = TASK_STACK_DATA_COLLECT * 6,
 	});
+	if (g_task_data_collect == NULL) { printf("[APP] Create DataCollectTask FAIL\r\n"); }
 	
 	g_task_fault_protect = osThreadNew(FaultProtectTask, NULL, &(osThreadAttr_t){
 		.name = "FaultProtectTask",
 		.priority = TASK_PRIO_FAULT_PROTECT,
         .stack_size = TASK_STACK_FAULT_PROTECT * 4,
 	});
+	if (g_task_fault_protect == NULL) { printf("[APP] Create FaultProtectTask FAIL\r\n"); }
 
 	g_task_charge_control = osThreadNew(ChargeControlTask, NULL, &(osThreadAttr_t){
 		.name = "ChargeControlTask",
 		.priority = TASK_PRIO_CHARGE_CONTROL,
 		.stack_size = TASK_STACK_CHARGE_CONTROL * 4,
 	});
+	if (g_task_charge_control == NULL) { printf("[APP] Create ChargeControlTask FAIL\r\n"); }
 
 	g_task_soc_calc = osThreadNew(SocCalcTask, NULL, &(osThreadAttr_t){
 		.name = "SocCalcTask",
 		.priority = TASK_PRIO_SOC_CALC,
 		.stack_size = TASK_STACK_SOC_CALC * 4,
 	});
+	if (g_task_soc_calc == NULL) { printf("[APP] Create SocCalcTask FAIL\r\n"); }
 
 	g_task_can_comm = osThreadNew(CanCommTask, NULL, &(osThreadAttr_t){
 		.name = "CanCommTask",
 		.priority = TASK_PRIO_CAN_COMM,
 		.stack_size = TASK_STACK_CAN_COMM * 4,
 	});
+	if (g_task_can_comm == NULL) { printf("[APP] Create CanCommTask FAIL\r\n"); }
 
 	g_task_balance = osThreadNew(BalanceTask, NULL, &(osThreadAttr_t){
 		.name = "BalanceTask",
 		.priority = TASK_PRIO_BALANCE,
 		.stack_size = TASK_STACK_BALANCE * 4,
 	});
+	if (g_task_balance == NULL) { printf("[APP] Create BalanceTask FAIL\r\n"); }
 
 	g_task_assist = osThreadNew(AssistTask, NULL, &(osThreadAttr_t){
 		.name = "AssistTask",
 		.priority = TASK_PRIO_ASSIST,
 		.stack_size = TASK_STACK_ASSIST * 4,
 	});
+	if (g_task_assist == NULL) { printf("[APP] Create AssistTask FAIL\r\n"); }
 }
-
-
 
 

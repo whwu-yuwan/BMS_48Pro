@@ -90,27 +90,6 @@ static float bq_adc_raw_to_mA(int16_t raw16, float resistor, float LSB){
 	return v_sense / r_shunt;
 }
 
-static float bq_adc_mV_to_oC(float ntc_mv) {
-	
-    const float R_PULL  = 10000.0f;   // 内置上拉电阻
-    const float VCC_MV  = 3300.0f;    // 上拉电源
-    const float R0      = 10000.0f;   // 25℃ NTC阻值
-    const float B_VALUE = 3950.0f;    // NTC B值
-    const float T0      = 298.15f;    // 25℃ 开尔文温度
-
-    // 防除零
-    if(ntc_mv >= VCC_MV) ntc_mv = VCC_MV - 1;
-    if(ntc_mv < 0) ntc_mv = 0;
-
-    // 1. 电压 → NTC电阻
-    float r_ntc = R_PULL * ntc_mv / (VCC_MV - ntc_mv);
-
-    // 2. 电阻 → 温度
-    float ln = logf(r_ntc / R0);
-    float temp_k = 1.0f / ((1.0f/T0) + (ln/B_VALUE));
-    return temp_k - 273.15f;
-}
-
 
 static uint8_t bq_get_gain12_offset(uint16_t *g_gain, int16_t *g_offset) {
 	/* 读取 ADC 增益/偏移用于后续电压/温度换算 */
@@ -246,19 +225,32 @@ uint8_t BQ76940_ReadCurrent(float *current)
 /* 读取温度通道（此处读取 TS1） */
 uint8_t BQ76940_ReadTemp(float *temp)
 {
-	if (temp == NULL)
+    float Rp=10000;
+    float T2=273.15+25;
+    float Bx=3380;
+    float Ka=273.15;
+	uint8_t readTempbuf1;
+	uint8_t readTempbuf2;
+	uint16_t  TempRes;
+
+	if (bq_read_u8(0x2C, &readTempbuf2) != 0) return 1;
+	printf("readTempbuf2=0x%02X\r\n", readTempbuf2);
+    if (bq_read_u8(0x2D, &readTempbuf1) != 0) return 1;
+	printf("readTempbuf1=0x%02X\r\n", readTempbuf1);
+    
+    TempRes = (readTempbuf2 << 8) | readTempbuf1;
+	int mv = (int)((uint32_t)TempRes * 382u / 1000u);
+	if ((mv <= 0) || (mv >= 3300))
+	{
+		return 1;
+	}
+	int r_ohm = (int)((10000u * (uint32_t)mv) / (uint32_t)(3300 - mv));
+	if (r_ohm <= 0)
 	{
 		return 1;
 	}
 
-	uint16_t raw = 0;
-	if (bq_read_u16(BQ76940_REG_TS1_HI, &raw) != 0)
-	{
-		return 1;
-	}
-	raw &= 0x3FFFu;
-	*temp = bq_adc_raw_to_mV(raw);
-	*temp = bq_adc_mV_to_oC(*temp);
+	*temp = 1.0f / (1.0f/T2 + (logf(((float)r_ohm)/Rp))/Bx) - Ka + 0.5f;
 	return 0;
 }
 

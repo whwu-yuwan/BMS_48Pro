@@ -10,8 +10,6 @@
 #define APP_FAULT_SEM_MAX        5u
 #define APP_CAN_TX_QUEUE_LEN     16u
 #define APP_ALARM_QUEUE_LEN      8u
-
-#define APP_CAN_ID_ALARM_STD     0x320u
 #define APP_CAN_ALARM_DLC        4u
 #define APP_CAN_TX_TIMEOUT_MS    10u
 
