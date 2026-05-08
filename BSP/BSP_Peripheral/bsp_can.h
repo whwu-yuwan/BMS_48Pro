@@ -4,6 +4,16 @@
 #include <stdint.h>
 #include "can.h"
 
+/**
+ * @brief CAN报文结构体
+ * 
+ * @param id CAN报文ID
+ * @param ide 是否为标准ID
+ * @param rtr 是否为远程传输请求
+ * @param dlc 数据长度
+ * @param data 数据指针
+ * @return BSP_CAN_Frame_t CAN报文结构体
+ * */
 typedef struct
 {
 	uint32_t id;

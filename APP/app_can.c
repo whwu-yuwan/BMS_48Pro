@@ -55,6 +55,13 @@ uint8_t APP_CAN_DecodeBmsBasic(const BSP_CAN_Frame_t *frame, APP_CAN_BmsBasic_t 
 	return 0u;
 }
 
+
+/**
+ * @brief 解析MOS控制帧
+ * @param frame 上位机can报文指针
+ * @param out 解析后的MOS控制帧指针
+ * @return uint8_t 0:成功 1:失败
+ */
 uint8_t APP_CAN_DecodeMosCtrl(const BSP_CAN_Frame_t *frame, APP_CAN_MosCtrl_t *out)
 {
 	if ((frame == NULL) || (out == NULL))
@@ -70,4 +77,19 @@ uint8_t APP_CAN_DecodeMosCtrl(const BSP_CAN_Frame_t *frame, APP_CAN_MosCtrl_t *o
 	out->charge_mos = frame->data[0];
 	out->discharge_mos = frame->data[1];
 	return 0u;
+}
+
+/**
+ * @brief 获取上位机can报文
+ * @param frame 上位机can报文指针
+ * @return uint8_t 0:成功 1:失败
+ */
+uint8_t APP_CAN_GetRxFrame(BSP_CAN_Frame_t *frame)
+{
+	uint8_t ret = BSP_CAN_TryReceive(frame);
+	if (ret == 0u)
+	{
+		return 0u;
+	}
+	return 1u;
 }

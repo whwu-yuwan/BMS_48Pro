@@ -307,8 +307,8 @@ int main(void)
     //BQ76940_Test_Poll();
   
   /* USER CODE END 3 */
+  }
 }
-
 /**
   * @brief System Clock Configuration
   * @retval None

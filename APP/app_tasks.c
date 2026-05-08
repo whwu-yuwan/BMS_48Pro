@@ -362,15 +362,23 @@ void CanCommTask(void *arg){
     {
 		// 处理CAN接收数据: 处理MOS控制帧
 		BSP_CAN_Frame_t rx = {0};
-		while (BSP_CAN_TryReceive(&rx) == 0u)
+		while (APP_CAN_GetRxFrame(&rx) == 0u)
 		{
-			if (decodeIfCtrlMos(&rx) == 0u)
+			if ((rx.ide == (uint8_t)CAN_ID_STD) && (rx.id == (uint32_t)APP_CAN_ID_RX_MOS_CTRL_STD) && (rx.dlc == 2u))
+			{
+				APP_CAN_MosCtrl_t mos_ctrl = {0};
+				if (APP_CAN_DecodeMosCtrl(&rx, &mos_ctrl) == 0u)
+				{
+					printf("[CAN_RX_MOS_CTRL]id=%u charge_mos=%u discharge_mos=%u\r\n", rx.id, mos_ctrl.charge_mos, mos_ctrl.discharge_mos);
+				}
+			}
+			if ((rx.ide == (uint8_t)CAN_ID_STD) && (rx.id == (uint32_t)APP_CAN_ID_ALARM_STD) && (rx.dlc == 3u))
 			{
 				continue;
 			}
 		}
 
-		// 处理CAN接收数据: 处理告警帧
+		// 处理告警队列中的数据包
 		if (g_queue_alarm != NULL)
 		{
 			APP_AlarmMsg_t alarm = {0};
@@ -386,7 +394,7 @@ void CanCommTask(void *arg){
 			}
 		}
 
-		// 处理CAN发送数据: 处理MOS控制帧
+		// 处理采集任务队列中的数据包
 		if (g_queue_can_tx != NULL)
 		{
 			BSP_CAN_Frame_t tx = {0};
