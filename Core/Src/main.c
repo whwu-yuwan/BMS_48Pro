@@ -68,6 +68,40 @@ static void BQ76940_Test_Poll(void);
 /* USER CODE BEGIN 0 */
 static uint8_t g_bq_inited = 0;
 
+/**
+ * @brief 测试CAN发送接收, 发送10个数据包, 每个数据包包含3个字节, 第一个字节为计数器, 第二个字节为0xAA, 第三个字节为0x55
+ * 
+ */
+static void test_can_send(void){
+  for (uint8_t i = 0; i < 10u; i++)
+  {
+    uint8_t data[3] = { i, 0xAAu, 0x55u };
+    uint8_t ret = BSP_CAN_SendStd(0x123u, data, 3u, 10u);
+    if (ret == 0)
+    {
+      printf("CAN_TX std=0x123 dlc=3 ret=%u cnt=%u\r\n", ret, i);
+    }
+    else
+    {
+      printf("CAN_TX std=0x123 dlc=3 ret=%u cnt=%u failed\r\n", ret, i);
+    }
+	  BSP_CAN_Frame_t frame = {0};
+    uint8_t ret1 = BSP_CAN_TryReceive(&frame);
+    if (ret1 == 0)
+    {
+      printf("CAN_RX std=0x%03X dlc=%u data=%02X %02X %02X\r\n", frame.id, frame.dlc, frame.data[0], frame.data[1], frame.data[2]);
+    }
+    else
+    {
+      printf("CAN_RX failed ret=%u\r\n", ret1);
+    }
+  }
+        
+    HAL_IWDG_Refresh(&hiwdg);
+    HAL_Delay(1000);
+}
+
+
 // 计算PEC
 static uint8_t bq_calc_pec_read_u8(uint8_t dev_addr, uint8_t reg, uint8_t data)
 {
@@ -248,8 +282,8 @@ int main(void)
   BSP_CAN_ConfigFilterAcceptAll();
   printf("Start...\r\n");
   BQ76940_Test_Init();
-  HAL_IWDG_Refresh(&hiwdg);
-  HAL_Delay(100);
+  
+  
   
   
   /* USER CODE END 2 */
@@ -271,8 +305,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     //BQ76940_Test_Poll();
-   
-  }
+  
   /* USER CODE END 3 */
 }
 

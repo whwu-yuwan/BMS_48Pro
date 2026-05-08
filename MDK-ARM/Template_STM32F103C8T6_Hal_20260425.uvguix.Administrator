@@ -1874,9 +1874,9 @@
       </Doc>
       <Doc>
         <Name>../Core/Src/main.c</Name>
-        <ColumnNumber>15</ColumnNumber>
-        <TopLine>255</TopLine>
-        <CurrentLine>265</CurrentLine>
+        <ColumnNumber>13</ColumnNumber>
+        <TopLine>249</TopLine>
+        <CurrentLine>266</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>

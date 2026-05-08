@@ -3054,25 +3054,25 @@ Image Symbol Table
     bsp_i2c_calc_pec_write                   0x08002ea5   Thumb Code    52  bsp_i2c.o(i.bsp_i2c_calc_pec_write)
     i.fputc                                  0x08002ed8   Section        0  usart.o(i.fputc)
     i.main                                   0x08002efc   Section        0  main.o(i.main)
-    i.prvResetNextTaskUnblockTime            0x08003058   Section        0  tasks.o(i.prvResetNextTaskUnblockTime)
-    prvResetNextTaskUnblockTime              0x08003059   Thumb Code    26  tasks.o(i.prvResetNextTaskUnblockTime)
-    i.uxListRemove                           0x08003078   Section        0  list.o(i.uxListRemove)
-    i.vListInsertEnd                         0x0800309e   Section        0  list.o(i.vListInsertEnd)
-    i.vTaskSwitchContext                     0x080030b8   Section        0  tasks.o(i.vTaskSwitchContext)
-    i.xPortSysTickHandler                    0x0800311c   Section        0  port.o(i.xPortSysTickHandler)
-    i.xTaskGetSchedulerState                 0x08003148   Section        0  tasks.o(i.xTaskGetSchedulerState)
-    i.xTaskIncrementTick                     0x08003164   Section        0  tasks.o(i.xTaskIncrementTick)
-    .constdata                               0x0800322c   Section       18  stm32f1xx_hal_rcc.o(.constdata)
-    aPredivFactorTable                       0x0800322c   Data           2  stm32f1xx_hal_rcc.o(.constdata)
-    aPLLMULFactorTable                       0x0800322e   Data          16  stm32f1xx_hal_rcc.o(.constdata)
-    .constdata                               0x0800323e   Section       16  system_stm32f1xx.o(.constdata)
-    .constdata                               0x0800324e   Section        8  system_stm32f1xx.o(.constdata)
-    .constdata                               0x08003256   Section       40  _printf_hex_int_ptr.o(.constdata)
-    uc_hextab                                0x08003256   Data          20  _printf_hex_int_ptr.o(.constdata)
-    lc_hextab                                0x0800326a   Data          20  _printf_hex_int_ptr.o(.constdata)
-    .constdata                               0x0800327e   Section       17  __printf_flags_ss_wp.o(.constdata)
-    maptable                                 0x0800327e   Data          17  __printf_flags_ss_wp.o(.constdata)
-    .conststring                             0x08003290   Section      101  bsp_can.o(.conststring)
+    i.prvResetNextTaskUnblockTime            0x0800305c   Section        0  tasks.o(i.prvResetNextTaskUnblockTime)
+    prvResetNextTaskUnblockTime              0x0800305d   Thumb Code    26  tasks.o(i.prvResetNextTaskUnblockTime)
+    i.uxListRemove                           0x0800307c   Section        0  list.o(i.uxListRemove)
+    i.vListInsertEnd                         0x080030a2   Section        0  list.o(i.vListInsertEnd)
+    i.vTaskSwitchContext                     0x080030bc   Section        0  tasks.o(i.vTaskSwitchContext)
+    i.xPortSysTickHandler                    0x08003120   Section        0  port.o(i.xPortSysTickHandler)
+    i.xTaskGetSchedulerState                 0x0800314c   Section        0  tasks.o(i.xTaskGetSchedulerState)
+    i.xTaskIncrementTick                     0x08003168   Section        0  tasks.o(i.xTaskIncrementTick)
+    .constdata                               0x08003230   Section       18  stm32f1xx_hal_rcc.o(.constdata)
+    aPredivFactorTable                       0x08003230   Data           2  stm32f1xx_hal_rcc.o(.constdata)
+    aPLLMULFactorTable                       0x08003232   Data          16  stm32f1xx_hal_rcc.o(.constdata)
+    .constdata                               0x08003242   Section       16  system_stm32f1xx.o(.constdata)
+    .constdata                               0x08003252   Section        8  system_stm32f1xx.o(.constdata)
+    .constdata                               0x0800325a   Section       40  _printf_hex_int_ptr.o(.constdata)
+    uc_hextab                                0x0800325a   Data          20  _printf_hex_int_ptr.o(.constdata)
+    lc_hextab                                0x0800326e   Data          20  _printf_hex_int_ptr.o(.constdata)
+    .constdata                               0x08003282   Section       17  __printf_flags_ss_wp.o(.constdata)
+    maptable                                 0x08003282   Data          17  __printf_flags_ss_wp.o(.constdata)
+    .conststring                             0x08003294   Section      101  bsp_can.o(.conststring)
     .data                                    0x20000000   Section        1  main.o(.data)
     g_bq_inited                              0x20000000   Data           1  main.o(.data)
     .data                                    0x20000001   Section        1  usart.o(.data)
@@ -3374,17 +3374,17 @@ Image Symbol Table
     _is_digit                                0x08002c3d   Thumb Code    14  __printf_wp.o(i._is_digit)
     _sys_exit                                0x08002c4b   Thumb Code     2  usart.o(i._sys_exit)
     fputc                                    0x08002ed9   Thumb Code    26  usart.o(i.fputc)
-    main                                     0x08002efd   Thumb Code   168  main.o(i.main)
-    uxListRemove                             0x08003079   Thumb Code    38  list.o(i.uxListRemove)
-    vListInsertEnd                           0x0800309f   Thumb Code    24  list.o(i.vListInsertEnd)
-    vTaskSwitchContext                       0x080030b9   Thumb Code    90  tasks.o(i.vTaskSwitchContext)
-    xPortSysTickHandler                      0x0800311d   Thumb Code    38  port.o(i.xPortSysTickHandler)
-    xTaskGetSchedulerState                   0x08003149   Thumb Code    22  tasks.o(i.xTaskGetSchedulerState)
-    xTaskIncrementTick                       0x08003165   Thumb Code   192  tasks.o(i.xTaskIncrementTick)
-    AHBPrescTable                            0x0800323e   Data          16  system_stm32f1xx.o(.constdata)
-    APBPrescTable                            0x0800324e   Data           8  system_stm32f1xx.o(.constdata)
-    Region$$Table$$Base                      0x080032f8   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x08003318   Number         0  anon$$obj.o(Region$$Table)
+    main                                     0x08002efd   Thumb Code   170  main.o(i.main)
+    uxListRemove                             0x0800307d   Thumb Code    38  list.o(i.uxListRemove)
+    vListInsertEnd                           0x080030a3   Thumb Code    24  list.o(i.vListInsertEnd)
+    vTaskSwitchContext                       0x080030bd   Thumb Code    90  tasks.o(i.vTaskSwitchContext)
+    xPortSysTickHandler                      0x08003121   Thumb Code    38  port.o(i.xPortSysTickHandler)
+    xTaskGetSchedulerState                   0x0800314d   Thumb Code    22  tasks.o(i.xTaskGetSchedulerState)
+    xTaskIncrementTick                       0x08003169   Thumb Code   192  tasks.o(i.xTaskIncrementTick)
+    AHBPrescTable                            0x08003242   Data          16  system_stm32f1xx.o(.constdata)
+    APBPrescTable                            0x08003252   Data           8  system_stm32f1xx.o(.constdata)
+    Region$$Table$$Base                      0x080032fc   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x0800331c   Number         0  anon$$obj.o(Region$$Table)
     g_uart_log_enable                        0x20000001   Data           1  usart.o(.data)
     __stdout                                 0x20000004   Data           4  usart.o(.data)
     uwTickFreq                               0x20000008   Data           1  stm32f1xx_hal.o(.data)
@@ -3408,9 +3408,9 @@ Memory Map of the image
 
   Image Entry point : 0x080000ed
 
-  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00003374, Max: 0x00010000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00003378, Max: 0x00010000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00003318, Max: 0x00010000, ABSOLUTE)
+    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x0000331c, Max: 0x00010000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -3598,39 +3598,39 @@ Memory Map of the image
     0x08002cec   0x08002cec   0x000001b8   Code   RO         5456    i.bsp_can_send      bsp_can.o
     0x08002ea4   0x08002ea4   0x00000034   Code   RO         5523    i.bsp_i2c_calc_pec_write  bsp_i2c.o
     0x08002ed8   0x08002ed8   0x00000024   Code   RO          417    i.fputc             usart.o
-    0x08002efc   0x08002efc   0x0000015c   Code   RO           17    i.main              main.o
-    0x08003058   0x08003058   0x00000020   Code   RO         4270    i.prvResetNextTaskUnblockTime  tasks.o
-    0x08003078   0x08003078   0x00000026   Code   RO         3821    i.uxListRemove      list.o
-    0x0800309e   0x0800309e   0x00000018   Code   RO         3825    i.vListInsertEnd    list.o
-    0x080030b6   0x080030b6   0x00000002   PAD
-    0x080030b8   0x080030b8   0x00000064   Code   RO         4303    i.vTaskSwitchContext  tasks.o
-    0x0800311c   0x0800311c   0x0000002c   Code   RO         5380    i.xPortSysTickHandler  port.o
-    0x08003148   0x08003148   0x0000001c   Code   RO         4311    i.xTaskGetSchedulerState  tasks.o
-    0x08003164   0x08003164   0x000000c8   Code   RO         4314    i.xTaskIncrementTick  tasks.o
-    0x0800322c   0x0800322c   0x00000012   Data   RO         2036    .constdata          stm32f1xx_hal_rcc.o
-    0x0800323e   0x0800323e   0x00000010   Data   RO         3657    .constdata          system_stm32f1xx.o
-    0x0800324e   0x0800324e   0x00000008   Data   RO         3658    .constdata          system_stm32f1xx.o
-    0x08003256   0x08003256   0x00000028   Data   RO         5923    .constdata          c_w.l(_printf_hex_int_ptr.o)
-    0x0800327e   0x0800327e   0x00000011   Data   RO         5949    .constdata          c_w.l(__printf_flags_ss_wp.o)
-    0x0800328f   0x0800328f   0x00000001   PAD
-    0x08003290   0x08003290   0x00000065   Data   RO         5457    .conststring        bsp_can.o
-    0x080032f5   0x080032f5   0x00000003   PAD
-    0x080032f8   0x080032f8   0x00000020   Data   RO         6269    Region$$Table       anon$$obj.o
+    0x08002efc   0x08002efc   0x00000160   Code   RO           17    i.main              main.o
+    0x0800305c   0x0800305c   0x00000020   Code   RO         4270    i.prvResetNextTaskUnblockTime  tasks.o
+    0x0800307c   0x0800307c   0x00000026   Code   RO         3821    i.uxListRemove      list.o
+    0x080030a2   0x080030a2   0x00000018   Code   RO         3825    i.vListInsertEnd    list.o
+    0x080030ba   0x080030ba   0x00000002   PAD
+    0x080030bc   0x080030bc   0x00000064   Code   RO         4303    i.vTaskSwitchContext  tasks.o
+    0x08003120   0x08003120   0x0000002c   Code   RO         5380    i.xPortSysTickHandler  port.o
+    0x0800314c   0x0800314c   0x0000001c   Code   RO         4311    i.xTaskGetSchedulerState  tasks.o
+    0x08003168   0x08003168   0x000000c8   Code   RO         4314    i.xTaskIncrementTick  tasks.o
+    0x08003230   0x08003230   0x00000012   Data   RO         2036    .constdata          stm32f1xx_hal_rcc.o
+    0x08003242   0x08003242   0x00000010   Data   RO         3657    .constdata          system_stm32f1xx.o
+    0x08003252   0x08003252   0x00000008   Data   RO         3658    .constdata          system_stm32f1xx.o
+    0x0800325a   0x0800325a   0x00000028   Data   RO         5923    .constdata          c_w.l(_printf_hex_int_ptr.o)
+    0x08003282   0x08003282   0x00000011   Data   RO         5949    .constdata          c_w.l(__printf_flags_ss_wp.o)
+    0x08003293   0x08003293   0x00000001   PAD
+    0x08003294   0x08003294   0x00000065   Data   RO         5457    .conststring        bsp_can.o
+    0x080032f9   0x080032f9   0x00000003   PAD
+    0x080032fc   0x080032fc   0x00000020   Data   RO         6269    Region$$Table       anon$$obj.o
 
 
-    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08003318, Size: 0x00000c98, Max: 0x00005000, ABSOLUTE)
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x0800331c, Size: 0x00000c98, Max: 0x00005000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x08003318   0x00000001   Data   RW           18    .data               main.o
-    0x20000001   0x08003319   0x00000001   Data   RW          419    .data               usart.o
-    0x20000002   0x0800331a   0x00000002   PAD
-    0x20000004   0x0800331c   0x00000004   Data   RW          420    .data               usart.o
-    0x20000008   0x08003320   0x0000000c   Data   RW         1873    .data               stm32f1xx_hal.o
-    0x20000014   0x0800332c   0x00000004   Data   RW         3659    .data               system_stm32f1xx.o
-    0x20000018   0x08003330   0x0000003c   Data   RW         4323    .data               tasks.o
-    0x20000054   0x0800336c   0x00000006   Data   RW         5615    .data               bsp_bq76940.o
-    0x2000005a   0x08003372   0x00000002   PAD
+    0x20000000   0x0800331c   0x00000001   Data   RW           18    .data               main.o
+    0x20000001   0x0800331d   0x00000001   Data   RW          419    .data               usart.o
+    0x20000002   0x0800331e   0x00000002   PAD
+    0x20000004   0x08003320   0x00000004   Data   RW          420    .data               usart.o
+    0x20000008   0x08003324   0x0000000c   Data   RW         1873    .data               stm32f1xx_hal.o
+    0x20000014   0x08003330   0x00000004   Data   RW         3659    .data               system_stm32f1xx.o
+    0x20000018   0x08003334   0x0000003c   Data   RW         4323    .data               tasks.o
+    0x20000054   0x08003370   0x00000006   Data   RW         5615    .data               bsp_bq76940.o
+    0x2000005a   0x08003376   0x00000002   PAD
     0x2000005c        -       0x00000028   Zero   RW          301    .bss                can.o
     0x20000084        -       0x00000054   Zero   RW          343    .bss                i2c.o
     0x200000d8        -       0x0000000c   Zero   RW          383    .bss                iwdg.o
@@ -3660,7 +3660,7 @@ Image component sizes
        176         30          0          0         84       1769   i2c.o
         44          8          0          0         12        759   iwdg.o
         62          0          0          0          0       1740   list.o
-       634        264          0          1          0     458916   main.o
+       638        266          0          1          0     458916   main.o
        194         18          0          0          0       3614   port.o
         64         26        236          0       1536        836   startup_stm32f103xb.o
        100         18          0         12          0       5430   stm32f1xx_hal.o
@@ -3681,7 +3681,7 @@ Image component sizes
        206         30          0          5         72       4188   usart.o
 
     ----------------------------------------------------------------------
-     11086       1050        414         92       3036     604021   Object Totals
+     11090       1052        414         92       3036     604021   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         26          0          3          4          0          0   (incl. Padding)
 
@@ -3748,15 +3748,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     12608       1100        472         92       3132     599809   Grand Totals
-     12608       1100        472         92       3132     599809   ELF Image Totals
-     12608       1100        472         92          0          0   ROM Totals
+     12612       1102        472         92       3132     599809   Grand Totals
+     12612       1102        472         92       3132     599809   ELF Image Totals
+     12612       1102        472         92          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                13080 (  12.77kB)
+    Total RO  Size (Code + RO Data)                13084 (  12.78kB)
     Total RW  Size (RW Data + ZI Data)              3224 (   3.15kB)
-    Total ROM Size (Code + RO Data + RW Data)      13172 (  12.86kB)
+    Total ROM Size (Code + RO Data + RW Data)      13176 (  12.87kB)
 
 ==============================================================================
 
