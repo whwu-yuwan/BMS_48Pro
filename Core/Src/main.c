@@ -31,6 +31,7 @@
 #include "bsp_bq76940.h"
 #include "bsp_can.h"
 #include "crc8.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -244,17 +245,12 @@ int main(void)
   MX_IWDG_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  BSP_CAN_ConfigFilterAcceptAll();
   printf("Start...\r\n");
   BQ76940_Test_Init();
+  HAL_IWDG_Refresh(&hiwdg);
+  HAL_Delay(100);
   
-  for (uint8_t i = 0; i < 10u; i++)
-  {
-    uint8_t data[3] = { i, 0xAAu, 0x55u };
-    uint8_t ret = BSP_CAN_SendStd(0x123u, data, 3u, 10u);
-    printf("CAN_TX std=0x123 dlc=3 ret=%u cnt=%u\r\n", ret, i);
-    HAL_IWDG_Refresh(&hiwdg);
-    HAL_Delay(100);
-  }
   
   /* USER CODE END 2 */
 
@@ -275,6 +271,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     //BQ76940_Test_Poll();
+   
   }
   /* USER CODE END 3 */
 }

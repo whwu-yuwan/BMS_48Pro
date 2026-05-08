@@ -73,6 +73,11 @@ static uint8_t decodeIfCtrlMos(const BSP_CAN_Frame_t *rx)
 
 
 /*==================================任务区=========================================*/
+/**
+ * @brief 采样任务
+ * 
+ * @param arg 任务参数
+ */
 void DataCollectTask(void *arg){
 	(void)arg;
 	float cell_v[BQ76940_CELL_NUM + 1] = {0};
@@ -181,6 +186,11 @@ void DataCollectTask(void *arg){
 	}
 }
 
+/**
+ * @brief 故障保护任务
+ * 
+ * @param arg 任务参数
+ */
 void FaultProtectTask(void *arg){
 	(void)arg;
 	float max_cell_v;
@@ -241,6 +251,11 @@ void FaultProtectTask(void *arg){
     }
 }
 
+/**
+ * @brief 充放电控制任务
+ * 
+ * @param arg 任务参数
+ */
 void ChargeControlTask(void *arg){
 	(void)arg;
     for(;;)
@@ -287,6 +302,11 @@ void SocCalcTask(void *arg){
     }
 }
 
+/**
+ * @brief 电池均衡任务
+ * 
+ * @param arg 任务参数
+ */
 void BalanceTask(void *arg){
 	(void)arg;
 	float voltage[BQ76940_CELL_NUM] = {0};
@@ -298,7 +318,6 @@ void BalanceTask(void *arg){
 	uint8_t mask3 = 0;
     for(;;)
     {
-		/*
 		osMutexAcquire(g_mutex_data, osWaitForever);
 		for (i = 0; i < BQ76940_CELL_NUM; i++)
 		{
@@ -313,7 +332,7 @@ void BalanceTask(void *arg){
 		}
 		for (i = 0; i < BQ76940_CELL_NUM; i++)
 		{
-			if (voltage[i] - voltage_min > 0.1f){
+			if (voltage[i] - voltage_min > 0.2f){
 				onoff = 1;
 				if (i < 5){
 					mask1 |= (1 << i);
@@ -327,14 +346,16 @@ void BalanceTask(void *arg){
 			}
 		}
 		BQ76940_SetBalanceMOS(onoff,mask1, mask2, mask3);
-		*/
 		printf("[均衡任务] 运行中... Tick: %u | 模拟控制电芯均衡: %d\r\n", osKernelGetTickCount(), onoff);
         osDelay(TASK_PERIOD_BALANCE_START + TASK_PERIOD_BALANCE_TIME + TASK_PERIOD_BALANCE_END);
     }
 }
 
-
-
+/**
+ * @brief CAN通信任务
+ * 
+ * @param arg 任务参数
+ */
 void CanCommTask(void *arg){
     (void)arg;
     for(;;)

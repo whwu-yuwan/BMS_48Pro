@@ -33,3 +33,5 @@
 .\buildfile\bsp_can.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h
 .\buildfile\bsp_can.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h
 .\buildfile\bsp_can.o: ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+.\buildfile\bsp_can.o: ../APP/app_can.h
+.\buildfile\bsp_can.o: D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\Bin\..\include\stdio.h

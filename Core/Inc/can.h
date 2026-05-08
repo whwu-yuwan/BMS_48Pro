@@ -35,6 +35,10 @@ extern "C" {
 extern CAN_HandleTypeDef hcan;
 
 /* USER CODE BEGIN Private defines */
+// CAN回环测试 0: 关闭 1: 开启
+#ifndef CAN_SELFTEST_LOOPBACK
+#define CAN_SELFTEST_LOOPBACK 0
+#endif
 
 /* USER CODE END Private defines */
 

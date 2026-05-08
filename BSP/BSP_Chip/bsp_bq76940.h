@@ -13,6 +13,7 @@
 #define BQ76940_CELL_PRESENT_MASK 0x4E73u
 #endif
 
+// 是否使用 PEC 校验：0=不使用，1=使用
 #ifndef BQ76940_USE_PEC
 #define BQ76940_USE_PEC 1
 #endif

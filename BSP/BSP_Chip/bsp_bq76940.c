@@ -225,7 +225,7 @@ uint8_t BQ76940_ReadCurrent(float *current)
 /* 读取温度通道（此处读取 TS1） */
 uint8_t BQ76940_ReadTemp(float *temp)
 {
-    float Rp=10000;
+    float Rp=47000;
     float T2=273.15+25;
     float Bx=3380;
     float Ka=273.15;

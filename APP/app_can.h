@@ -23,6 +23,13 @@
 #define APP_CAN_ID_MOS_ACK_STD   0x323u // MOS 控制确认帧
 #define APP_CAN_ID_ALARM_STD     0x320u // 报警状态帧
 
+/**
+ * @brief CAN 接收报文 ID ,上位机发送给下位机的控制帧
+ * */
+#define APP_CAN_ID_RX_MOS_CTRL_STD 0x324u // 充放电MOS控制帧
+#define APP_CAN_ID_RX_ALARM_STD    0x325u // 取消报警状态帧
+
+
 
 
 /**

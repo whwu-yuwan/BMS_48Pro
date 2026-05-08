@@ -62,7 +62,7 @@ uint8_t APP_CAN_DecodeMosCtrl(const BSP_CAN_Frame_t *frame, APP_CAN_MosCtrl_t *o
 		return 2u;
 	}
 
-	if ((frame->ide != (uint8_t)CAN_ID_STD) || (frame->id != (uint32_t)APP_CAN_ID_MOS_CTRL_STD) || (frame->dlc < 2u))
+	if ((frame->ide != (uint8_t)CAN_ID_STD) || (frame->id != (uint32_t)APP_CAN_ID_RX_MOS_CTRL_STD) || (frame->dlc < 2u))
 	{
 		return 1u;
 	}
