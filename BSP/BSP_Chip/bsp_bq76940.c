@@ -234,9 +234,9 @@ uint8_t BQ76940_ReadTemp(float *temp)
 	uint16_t  TempRes;
 
 	if (bq_read_u8(0x2C, &readTempbuf2) != 0) return 1;
-	printf("readTempbuf2=0x%02X\r\n", readTempbuf2);
+
     if (bq_read_u8(0x2D, &readTempbuf1) != 0) return 1;
-	printf("readTempbuf1=0x%02X\r\n", readTempbuf1);
+
     
     TempRes = (readTempbuf2 << 8) | readTempbuf1;
 	int mv = (int)((uint32_t)TempRes * 382u / 1000u);
@@ -319,6 +319,24 @@ uint8_t BQ76940_SetChargeMOS(uint8_t onoff)
 	}
 
 	return bq_write_u8(BQ76940_REG_SYS_CTRL2, sys_ctrl2);
+}
+
+uint8_t BQ76940_ReadMosState(uint8_t *charge_on, uint8_t *discharge_on)
+{
+	if ((charge_on == NULL) || (discharge_on == NULL))
+	{
+		return 1u;
+	}
+
+	uint8_t sys_ctrl2 = 0;
+	if (bq_read_u8(BQ76940_REG_SYS_CTRL2, &sys_ctrl2) != 0)
+	{
+		return 1u;
+	}
+
+	*charge_on = ((sys_ctrl2 & BQ76940_SYS_CTRL2_CHG_ON) != 0u) ? 1u : 0u;
+	*discharge_on = ((sys_ctrl2 & BQ76940_SYS_CTRL2_DSG_ON) != 0u) ? 1u : 0u;
+	return 0u;
 }
 
 /**

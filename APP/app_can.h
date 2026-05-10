@@ -18,10 +18,16 @@
  * @brief CAN 报文 ID 定义（标准帧）
  */
 #define APP_CAN_ID_TEST_STD      0x123u // 测试帧
+#define APP_CAN_ID_ALARM_STD     0x320u // 报警状态帧
 #define APP_CAN_ID_BMS_BASIC_STD 0x321u // BMS 基础状态帧
 #define APP_CAN_ID_MOS_CTRL_STD  0x322u // MOS 控制帧
 #define APP_CAN_ID_MOS_ACK_STD   0x323u // MOS 控制确认帧
-#define APP_CAN_ID_ALARM_STD     0x320u // 报警状态帧
+#define APP_CAN_ID_CELL_VOLT_STD_1_4    0x326u // 1-4串电池电压
+#define APP_CAN_ID_CELL_VOLT_STD_5_8    0x327u // 5-8串电池电压
+#define APP_CAN_ID_CELL_VOLT_STD_9_12  0x328u // 9_12串电池电压
+#define APP_CAN_ID_CELL_VOLT_STD_13_15  0x329u // 13-15串电池电压
+
+
 
 /**
  * @brief CAN 接收报文 ID ,上位机发送给下位机的控制帧

@@ -27,7 +27,52 @@ Project File Date:  05/06/2026
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\Bin'
 Build target 'Template_STM32F103C8T6_Hal_20260425'
-".\BuildFile\BMS_48_pro.axf" - 0 Error(s), 0 Warning(s).
+compiling bsp_bq76940.c...
+..\BSP\BSP_Chip\bsp_bq76940.c(71): warning:  #111-D: statement is unreachable
+  	return BSP_I2C_Write_Byte(BQ76940_ADDR, reg, val);
+..\BSP\BSP_Chip\bsp_bq76940.c: 1 warning, 0 errors
+compiling freertos.c...
+compiling main.c...
+../Core/Src/main.c(164): warning:  #177-D: function "BQ76940_Test_Poll"  was declared but never referenced
+  static void BQ76940_Test_Poll(void)
+../Core/Src/main.c(75): warning:  #177-D: function "test_can_send"  was declared but never referenced
+  static void test_can_send(void){
+../Core/Src/main.c(131): warning:  #177-D: function "bq_dump_balance_regs_with_pec"  was declared but never referenced
+  static void bq_dump_balance_regs_with_pec(void)
+../Core/Src/main.c: 3 warnings, 0 errors
+compiling app_tasks.c...
+..\APP\app_tasks.c(143): warning:  #870-D: invalid multibyte character sequence
+  		printf("[采样任务] 运行�?... Tick: %u | 模拟读取15串总电�?:[%.2f]电流:[%.2f]温度:[%.2f]\r\n",
+..\APP\app_tasks.c(143): warning:  #870-D: invalid multibyte character sequence
+  		printf("[采样任务] 运行�?... Tick: %u | 模拟读取15串总电�?:[%.2f]电流:[%.2f]温度:[%.2f]\r\n",
+..\APP\app_tasks.c(145): warning:  #870-D: invalid multibyte character sequence
+  		printf("[采样任务] 运行�?... Tick: %u | 读取电池1:[%.2f],电池2:[%.2f],电池3:[%.2f],电池4:[%.2f],电池5:[%.2f],电池6:[%.2f],电池7:[%.2f],电池8:[%.2f],电池9:[%.2f],电池10:[%.2f],电池11:[%.2f],电池12:[%.2f],电池13:[%.2f],电池14:[%.2f],电池15:[%.2f]\r\n",
+..\APP\app_tasks.c(304): warning:  #870-D: invalid multibyte character sequence
+  				printf("[故障任务] 运行�?... Tick: %u | 模拟检测故障状�?: 过压[%.2f]\r\n", osKernelGetTickCount(), max_cell_v);
+..\APP\app_tasks.c(304): warning:  #870-D: invalid multibyte character sequence
+  				printf("[故障任务] 运行�?... Tick: %u | 模拟检测故障状�?: 过压[%.2f]\r\n", osKernelGetTickCount(), max_cell_v);
+..\APP\app_tasks.c(321): warning:  #870-D: invalid multibyte character sequence
+  				printf("[故障任务] 运行�?... Tick: %u | 模拟检测故障状�?: 过流[%.2f]\r\n", osKernelGetTickCount(), current);
+..\APP\app_tasks.c(321): warning:  #870-D: invalid multibyte character sequence
+  				printf("[故障任务] 运行�?... Tick: %u | 模拟检测故障状�?: 过流[%.2f]\r\n", osKernelGetTickCount(), current);
+..\APP\app_tasks.c(357): warning:  #870-D: invalid multibyte character sequence
+  		printf("[充放电任务] 运行�?... Tick: %u | 判断充放电状�?: 充电mos: %d, 放电mos: %d\r\n", osKernelGetTickCount(), charge_mos, discharge_mos);
+..\APP\app_tasks.c(357): warning:  #870-D: invalid multibyte character sequence
+  		printf("[充放电任务] 运行�?... Tick: %u | 判断充放电状�?: 充电mos: %d, 放电mos: %d\r\n", osKernelGetTickCount(), charge_mos, discharge_mos);
+..\APP\app_tasks.c(400): warning:  #870-D: invalid multibyte character sequence
+  		printf("[SOC任务] 运行�?... Tick: %u | 计算SOC: %u%% \r\n", osKernelGetTickCount(), (unsigned int)soc);
+..\APP\app_tasks.c(449): warning:  #870-D: invalid multibyte character sequence
+  		printf("[均衡任务] 运行�?... Tick: %u | 模拟控制电芯均衡: %d\r\n", osKernelGetTickCount(), onoff);
+..\APP\app_tasks.c(28): warning:  #177-D: function "decodeIfCtrlMos"  was declared but never referenced
+  static uint8_t decodeIfCtrlMos(const BSP_CAN_Frame_t *rx)
+..\APP\app_tasks.c: 12 warnings, 0 errors
+linking...
+Program Size: Code=31308 RO-data=2004 RW-data=220 ZI-data=17564  
+FromELF: creating hex file...
+After Build - User command #1: fromelf --bin --output D:\01_Embedded\01_Project\BMS_48Pro_260425\Template_STM32F103C8T6_Hal_20260425\MDK-ARM\BuildFile
+Error: Q0120E: No input file specified.
+Finished: 0 information, 0 warning and 1 error messages.
+".\BuildFile\BMS_48_pro.axf" - 0 Error(s), 16 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -51,7 +96,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.4.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:00
+Build Time Elapsed:  00:00:05
 </pre>
 </body>
 </html>

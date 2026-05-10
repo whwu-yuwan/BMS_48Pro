@@ -71,6 +71,20 @@ static uint8_t decodeIfCtrlMos(const BSP_CAN_Frame_t *rx)
 	return 0u;
 }
 
+static uint16_t app_f32_v_to_u16_mV(float v)
+{
+	float mv = v * 1000.0f;
+	if (mv < 0.0f)
+	{
+		mv = 0.0f;
+	}
+	if (mv > 65535.0f)
+	{
+		mv = 65535.0f;
+	}
+	return (uint16_t)(mv + 0.5f);
+}
+
 
 /*==================================任务区=========================================*/
 /**
@@ -180,6 +194,79 @@ void DataCollectTask(void *arg){
 			tx.data[5] = cell_count;
 
 			(void)osMessageQueuePut(g_queue_can_tx, &tx, 0u, 0u);
+
+			// 单电池电压数据报文 1 - 4串
+			tx.ide = (uint8_t)CAN_ID_STD;
+			tx.rtr = (uint8_t)CAN_RTR_DATA;
+			tx.id = (uint32_t)APP_CAN_ID_CELL_VOLT_STD_1_4;
+			tx.dlc = 8u;
+			uint16_t mv0 = app_f32_v_to_u16_mV(cell_v[0]);
+			uint16_t mv1 = app_f32_v_to_u16_mV(cell_v[1]);
+			uint16_t mv2 = app_f32_v_to_u16_mV(cell_v[2]);
+			uint16_t mv3 = app_f32_v_to_u16_mV(cell_v[3]);
+			tx.data[0] = (uint8_t)(mv0 & 0xFFu);
+			tx.data[1] = (uint8_t)((mv0 >> 8) & 0xFFu);
+			tx.data[2] = (uint8_t)(mv1 & 0xFFu);
+			tx.data[3] = (uint8_t)((mv1 >> 8) & 0xFFu);
+			tx.data[4] = (uint8_t)(mv2 & 0xFFu);
+			tx.data[5] = (uint8_t)((mv2 >> 8) & 0xFFu);
+			tx.data[6] = (uint8_t)(mv3 & 0xFFu);
+			tx.data[7] = (uint8_t)((mv3 >> 8) & 0xFFu);
+			(void)osMessageQueuePut(g_queue_can_tx, &tx, 0u, 0u);
+
+			// 单电池电压数据报文 5 - 8串
+			tx.ide = (uint8_t)CAN_ID_STD;
+			tx.rtr = (uint8_t)CAN_RTR_DATA;
+			tx.id = (uint32_t)APP_CAN_ID_CELL_VOLT_STD_5_8;
+			tx.dlc = 8u;
+			uint16_t mv4 = app_f32_v_to_u16_mV(cell_v[4]);
+			uint16_t mv5 = app_f32_v_to_u16_mV(cell_v[5]);
+			uint16_t mv6 = app_f32_v_to_u16_mV(cell_v[6]);
+			uint16_t mv7 = app_f32_v_to_u16_mV(cell_v[7]);
+			tx.data[0] = (uint8_t)(mv4 & 0xFFu);
+			tx.data[1] = (uint8_t)((mv4 >> 8) & 0xFFu);
+			tx.data[2] = (uint8_t)(mv5 & 0xFFu);
+			tx.data[3] = (uint8_t)((mv5 >> 8) & 0xFFu);
+			tx.data[4] = (uint8_t)(mv6 & 0xFFu);
+			tx.data[5] = (uint8_t)((mv6 >> 8) & 0xFFu);
+			tx.data[6] = (uint8_t)(mv7 & 0xFFu);
+			tx.data[7] = (uint8_t)((mv7 >> 8) & 0xFFu);
+			(void)osMessageQueuePut(g_queue_can_tx, &tx, 0u, 0u);
+
+			// 单电池电压数据报文 9 - 12串
+			tx.ide = (uint8_t)CAN_ID_STD;
+			tx.rtr = (uint8_t)CAN_RTR_DATA;
+			tx.id = (uint32_t)APP_CAN_ID_CELL_VOLT_STD_9_12;
+			tx.dlc = 8u;
+			uint16_t mv8 = app_f32_v_to_u16_mV(cell_v[8]);
+			uint16_t mv9 = app_f32_v_to_u16_mV(cell_v[9]);
+			uint16_t mv10 = app_f32_v_to_u16_mV(cell_v[10]);
+			uint16_t mv11 = app_f32_v_to_u16_mV(cell_v[11]);
+			tx.data[0] = (uint8_t)(mv8 & 0xFFu);
+			tx.data[1] = (uint8_t)((mv8 >> 8) & 0xFFu);
+			tx.data[2] = (uint8_t)(mv9 & 0xFFu);
+			tx.data[3] = (uint8_t)((mv9 >> 8) & 0xFFu);
+			tx.data[4] = (uint8_t)(mv10 & 0xFFu);
+			tx.data[5] = (uint8_t)((mv10 >> 8) & 0xFFu);
+			tx.data[6] = (uint8_t)(mv11 & 0xFFu);
+			tx.data[7] = (uint8_t)((mv11 >> 8) & 0xFFu);
+			(void)osMessageQueuePut(g_queue_can_tx, &tx, 0u, 0u);
+
+			// 单电池电压数据报文 13 - 15串
+			tx.ide = (uint8_t)CAN_ID_STD;
+			tx.rtr = (uint8_t)CAN_RTR_DATA;
+			tx.id = (uint32_t)APP_CAN_ID_CELL_VOLT_STD_13_15;
+			tx.dlc = 6u;
+			uint16_t mv12 = app_f32_v_to_u16_mV(cell_v[12]);
+			uint16_t mv13 = app_f32_v_to_u16_mV(cell_v[13]);
+			uint16_t mv14 = app_f32_v_to_u16_mV(cell_v[14]);
+			tx.data[0] = (uint8_t)(mv12 & 0xFFu);
+			tx.data[1] = (uint8_t)((mv12 >> 8) & 0xFFu);
+			tx.data[2] = (uint8_t)(mv13 & 0xFFu);
+			tx.data[3] = (uint8_t)((mv13 >> 8) & 0xFFu);
+			tx.data[4] = (uint8_t)(mv14 & 0xFFu);
+			tx.data[5] = (uint8_t)((mv14 >> 8) & 0xFFu);
+			(void)osMessageQueuePut(g_queue_can_tx, &tx, 0u, 0u);
 		}
 
 		osDelay(TASK_PERIOD_DATA_COLLECT);
@@ -272,12 +359,25 @@ void ChargeControlTask(void *arg){
 		uint8_t discharge_req = (discharge_mos != 0u) ? 1u : 0u;
 		if ((charge_req != last_charge_mos) || (discharge_req != last_discharge_mos))
 		{
+			uint8_t chg_now = 0u;
+			uint8_t dsg_now = 0u;
 			osMutexAcquire(g_mutex_i2c, osWaitForever);
 			(void)BQ76940_SetChargeMOS(charge_req);
 			(void)BQ76940_SetDischargeMOS(discharge_req);
+			uint8_t rd = BQ76940_ReadMosState(&chg_now, &dsg_now);
 			osMutexRelease(g_mutex_i2c);
 			last_charge_mos = charge_req;
 			last_discharge_mos = discharge_req;
+			if (rd == 0u)
+			{
+				printf("[MOS_REG] req chg=%u dsg=%u | reg chg=%u dsg=%u\r\n",
+					   (unsigned int)charge_req, (unsigned int)discharge_req,
+					   (unsigned int)chg_now, (unsigned int)dsg_now);
+			}
+			else
+			{
+				printf("[MOS_REG] read fail\r\n");
+			}
 		}
 
         osDelay(TASK_PERIOD_CHARGE_CONTROL);
@@ -362,18 +462,31 @@ void CanCommTask(void *arg){
     {
 		// 处理CAN接收数据: 处理MOS控制帧
 		BSP_CAN_Frame_t rx = {0};
-		while (APP_CAN_GetRxFrame(&rx) == 0u)
+		while (APP_CAN_TryReceive(&rx) == 0u)
 		{
-			if ((rx.ide == (uint8_t)CAN_ID_STD) && (rx.id == (uint32_t)APP_CAN_ID_RX_MOS_CTRL_STD) && (rx.dlc == 2u))
+			if ((rx.ide == (uint8_t)CAN_ID_STD) && (rx.id == (uint32_t)APP_CAN_ID_RX_MOS_CTRL_STD) && (rx.dlc >= 2u))
 			{
-				APP_CAN_MosCtrl_t mos_ctrl = {0};
-				if (APP_CAN_DecodeMosCtrl(&rx, &mos_ctrl) == 0u)
+				uint8_t charge_mos = rx.data[0];
+				uint8_t discharge_mos = rx.data[1];
+
+				osMutexAcquire(g_mutex_data, osWaitForever);
+				if ((charge_mos == 0u) || (charge_mos == 1u))
 				{
-					printf("[CAN_RX_MOS_CTRL]id=%u charge_mos=%u discharge_mos=%u\r\n", rx.id, mos_ctrl.charge_mos, mos_ctrl.discharge_mos);
+					bms_data.charge_mos = charge_mos;
 				}
+				if ((discharge_mos == 0u) || (discharge_mos == 1u))
+				{
+					bms_data.discharge_mos = discharge_mos;
+				}
+				osMutexRelease(g_mutex_data);
+
+				printf("[CAN_RX_MOS_CTRL] id=0x%lX charge_mos=%u discharge_mos=%u\r\n",
+					   (unsigned long)rx.id, (unsigned int)charge_mos, (unsigned int)discharge_mos);
 			}
-			if ((rx.ide == (uint8_t)CAN_ID_STD) && (rx.id == (uint32_t)APP_CAN_ID_ALARM_STD) && (rx.dlc == 3u))
+			if ((rx.ide == (uint8_t)CAN_ID_STD) && (rx.id == (uint32_t)APP_CAN_ID_RX_ALARM_STD) && (rx.dlc >= 1u))
 			{
+				printf("[CAN_RX_CLR_ALARM] id=0x%lX cmd=%u\r\n",
+					   (unsigned long)rx.id, (unsigned int)rx.data[0]);
 				continue;
 			}
 		}
