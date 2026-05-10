@@ -21,17 +21,12 @@ Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.0.8.0
 Dialog DLL:      TCM.DLL V1.48.0.0
  
 <h2>Project:</h2>
-D:\01_Embedded\01_Project\BMS_48Pro_260425\Template_STM32F103C8T6_Hal_20260425\MDK-ARM\Template_STM32F103C8T6_Hal_20260425.uvprojx
+D:\01_Embedded\01_Project\BMS_48Pro_260425\Template_STM32F103C8T6_Hal_20260425\src\MDK-ARM\Template_STM32F103C8T6_Hal_20260425.uvprojx
 Project File Date:  05/06/2026
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\01_Embedded\04_Tool\keil5\ARM\ARMCC\Bin'
 Build target 'Template_STM32F103C8T6_Hal_20260425'
-compiling bsp_bq76940.c...
-..\BSP\BSP_Chip\bsp_bq76940.c(71): warning:  #111-D: statement is unreachable
-  	return BSP_I2C_Write_Byte(BQ76940_ADDR, reg, val);
-..\BSP\BSP_Chip\bsp_bq76940.c: 1 warning, 0 errors
-compiling freertos.c...
 compiling main.c...
 ../Core/Src/main.c(164): warning:  #177-D: function "BQ76940_Test_Poll"  was declared but never referenced
   static void BQ76940_Test_Poll(void)
@@ -40,6 +35,11 @@ compiling main.c...
 ../Core/Src/main.c(131): warning:  #177-D: function "bq_dump_balance_regs_with_pec"  was declared but never referenced
   static void bq_dump_balance_regs_with_pec(void)
 ../Core/Src/main.c: 3 warnings, 0 errors
+compiling bsp_bq76940.c...
+..\BSP\BSP_Chip\bsp_bq76940.c(71): warning:  #111-D: statement is unreachable
+  	return BSP_I2C_Write_Byte(BQ76940_ADDR, reg, val);
+..\BSP\BSP_Chip\bsp_bq76940.c: 1 warning, 0 errors
+compiling freertos.c...
 compiling app_tasks.c...
 ..\APP\app_tasks.c(143): warning:  #870-D: invalid multibyte character sequence
   		printf("[采样任务] 运行�?... Tick: %u | 模拟读取15串总电�?:[%.2f]电流:[%.2f]温度:[%.2f]\r\n",
@@ -96,7 +96,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.4.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:05
+Build Time Elapsed:  00:00:04
 </pre>
 </body>
 </html>
