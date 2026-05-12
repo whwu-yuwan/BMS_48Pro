@@ -1,0 +1,49 @@
+<mxfile host="Electron">
+  <diagram name="第 1 页" id="f0zxIT2WH0HvbxrN-ZFj">
+    <mxGraphModel dx="743" dy="817" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="J2x_4yo3nT6xLVHmW5Hf-13" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;" value="" vertex="1">
+          <mxGeometry height="450" width="300" x="110" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="J2x_4yo3nT6xLVHmW5Hf-3" edge="1" parent="1" source="J2x_4yo3nT6xLVHmW5Hf-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="J2x_4yo3nT6xLVHmW5Hf-2" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="J2x_4yo3nT6xLVHmW5Hf-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=default;fillColor=default;align=center;verticalAlign=middle;rounded=0;fontSize=15;" value="osDelay100ms" vertex="1">
+          <mxGeometry height="30" width="130" x="240" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="J2x_4yo3nT6xLVHmW5Hf-6" edge="1" parent="1" source="J2x_4yo3nT6xLVHmW5Hf-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="J2x_4yo3nT6xLVHmW5Hf-5" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="J2x_4yo3nT6xLVHmW5Hf-2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=#006EAF;fillColor=#1ba1e2;align=center;verticalAlign=middle;rounded=0;fontSize=15;fontColor=#ffffff;" value="申请全局变量Mutex" vertex="1">
+          <mxGeometry height="30" width="150" x="230" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="J2x_4yo3nT6xLVHmW5Hf-10" edge="1" parent="1" source="J2x_4yo3nT6xLVHmW5Hf-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="J2x_4yo3nT6xLVHmW5Hf-9" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="J2x_4yo3nT6xLVHmW5Hf-4" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=#006EAF;fillColor=#1ba1e2;align=center;verticalAlign=middle;rounded=0;fontSize=15;fontColor=#ffffff;" value="释放全局变量Mutex" vertex="1">
+          <mxGeometry height="30" width="150" x="230" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="J2x_4yo3nT6xLVHmW5Hf-7" edge="1" parent="1" source="J2x_4yo3nT6xLVHmW5Hf-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="J2x_4yo3nT6xLVHmW5Hf-4" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="J2x_4yo3nT6xLVHmW5Hf-5" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=default;fillColor=default;align=center;verticalAlign=middle;rounded=0;fontSize=15;" value="读取全局变量" vertex="1">
+          <mxGeometry height="30" width="130" x="240" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="J2x_4yo3nT6xLVHmW5Hf-12" edge="1" parent="1" source="J2x_4yo3nT6xLVHmW5Hf-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="J2x_4yo3nT6xLVHmW5Hf-11" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="J2x_4yo3nT6xLVHmW5Hf-9" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=default;fillColor=default;align=center;verticalAlign=middle;rounded=0;fontSize=15;" value="基于全局变量的充放电状态&lt;div&gt;GPIO控制BQ76200&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="190" x="210" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="J2x_4yo3nT6xLVHmW5Hf-11" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=default;fillColor=default;align=center;verticalAlign=middle;rounded=1;fontSize=15;" value="结束任务" vertex="1">
+          <mxGeometry height="30" width="130" x="240" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="J2x_4yo3nT6xLVHmW5Hf-14" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=20;" value="充放电状态识别与逻辑控制" vertex="1">
+          <mxGeometry height="30" width="260" x="120" y="120" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
